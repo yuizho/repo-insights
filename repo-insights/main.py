@@ -1,7 +1,7 @@
 import fire
-from github_api import Client, DATETIME_FORMAT
+from github_api import Client
+from lead_time import create_to_load_time_records, LeadTimeRecord
 from gql import gql
-from datetime import datetime
 
 
 def lead_time(repo_name="", token="", base="master"):
@@ -44,17 +44,10 @@ def lead_time(repo_name="", token="", base="master"):
         {"owner": owner, "name": name, "base": base},
     )
 
-    print("title\turl\tlead time(days)")
-    for pr in resp["repository"]["pullRequests"]["edges"]:
-        title = pr["node"]["title"]
-        url = pr["node"]["url"]
-        mergedAt = datetime.strptime(pr["node"]["mergedAt"], DATETIME_FORMAT)
-        firstCommitedAt = datetime.strptime(
-            pr["node"]["commits"]["nodes"][0]["commit"]["committedDate"],
-            DATETIME_FORMAT,
-        )
-
-        print(f"{title}\t{url}\t{mergedAt - firstCommitedAt}")
+    print("\t".join(LeadTimeRecord.get_fields_name()))
+    records = create_to_load_time_records(resp)
+    for record in records:
+        print(record)
 
 
 if __name__ == "__main__":
