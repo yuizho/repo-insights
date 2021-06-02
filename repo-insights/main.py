@@ -1,6 +1,6 @@
 import fire
-from gql import gql, Client
-from gql.transport.requests import RequestsHTTPTransport
+from github_api import Client, DATETIME_FORMAT
+from gql import gql
 from datetime import datetime
 
 
@@ -11,20 +11,6 @@ def lead_time(repo_name="", token="", base="master"):
     :param token: your github token
     :param base: the base branch of PR
     """
-    client = Client(
-        transport=RequestsHTTPTransport(
-            url="https://api.github.com/graphql",
-            use_json=True,
-            headers={
-                "Content-type": "application/json",
-                "Authorization": f"Bearer {token}",
-            },
-            retries=3,
-        )
-    )
-
-    owner, name = repo_name.split("/")
-    variables = {"owner": owner, "name": name, "base": base}
     query = gql(
         """
         query ($owner: String!, $name: String!, $base: String!) {
@@ -51,20 +37,21 @@ def lead_time(repo_name="", token="", base="master"):
         }
         """
     )
-    resp = client.execute(
-        query,
-        variable_values=variables,
-    )
+    owner, name = repo_name.split("/")
 
-    format = "%Y-%m-%dT%H:%M:%SZ"
+    resp = Client(token).execute(
+        query,
+        {"owner": owner, "name": name, "base": base},
+    )
 
     print("title\turl\tlead time(days)")
     for pr in resp["repository"]["pullRequests"]["edges"]:
         title = pr["node"]["title"]
         url = pr["node"]["url"]
-        mergedAt = datetime.strptime(pr["node"]["mergedAt"], format)
+        mergedAt = datetime.strptime(pr["node"]["mergedAt"], DATETIME_FORMAT)
         firstCommitedAt = datetime.strptime(
-            pr["node"]["commits"]["nodes"][0]["commit"]["committedDate"], format
+            pr["node"]["commits"]["nodes"][0]["commit"]["committedDate"],
+            DATETIME_FORMAT,
         )
 
         print(f"{title}\t{url}\t{mergedAt - firstCommitedAt}")
