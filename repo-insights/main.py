@@ -12,7 +12,7 @@ def cli():
 
 @cli.command()
 @click.argument("repository_name")
-@click.argument("token")
+@click.argument("personal_token")
 @click.option(
     "--first-merged-date",
     "-f",
