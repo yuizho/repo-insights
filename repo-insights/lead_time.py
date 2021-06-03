@@ -2,6 +2,7 @@ from github_api import DATETIME_FORMAT
 from github_api import Client
 from gql import gql
 from datetime import datetime
+from yaspin import yaspin
 
 
 def create_to_load_time_records(json):
@@ -23,6 +24,7 @@ def get_next_cursor(json):
     return edges[0]["cursor"] if edges else None
 
 
+@yaspin(text="Fetching PR data...")
 def fetch_lead_time_record(repo_name, token, from_date, base):
     # TODO: ソートして取ってこないと冪等性がなくなってしまう気がする。
     query = gql(

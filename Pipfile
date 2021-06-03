@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 fire = "*"
 gql = "*"
+yaspin = "*"
 
 [dev-packages]
 flake8 = "*"
