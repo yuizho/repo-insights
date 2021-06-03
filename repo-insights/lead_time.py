@@ -32,7 +32,6 @@ def fetch_lead_time_record(repo_name, token, from_date, base):
         query ($per_page: Int!, $owner: String!, $name: String!, $base: String!, $cursor: String) {
             repository(owner: $owner, name: $name) {
                 pullRequests(last: $per_page, states: MERGED, baseRefName: $base, before: $cursor) {
-                    totalCount
                     edges {
                         cursor
                         node {
