@@ -1,7 +1,7 @@
 from github_api import DATETIME_FORMAT
 from github_api import Client
 from gql import gql
-from datetime import datetime
+from datetime import datetime, timedelta
 from yaspin import yaspin
 
 
@@ -88,8 +88,9 @@ class LeadTimeRecord:
         self.firstCommitedAt = firstCommitedAt
 
     def __str__(self):
-        return f"{self.title}\t{self.url}\t{self.mergedAt}\t{self.mergedAt - self.firstCommitedAt}"
+        lead_time = self.mergedAt - self.firstCommitedAt
+        return f"{self.mergedAt}\t{self.title}\t{self.url}\t{round(lead_time / timedelta(days=1), 2)}"
 
     @classmethod
     def get_fields_name(cls):
-        return ["title", "url", "merged at", "lead time(days)"]
+        return ["merged at", "title", "url", "lead time(day)"]
