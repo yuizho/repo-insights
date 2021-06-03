@@ -23,13 +23,15 @@ def cli():
 @click.option(
     "--base", "-b", default="master", show_default=True, help="the base branch of PR"
 )
-def lead_time(repository_name, token, first_merged_date, base):
+def lead_time(repository_name, personal_token, first_merged_date, base):
     """
     This command allows you to calculate lead time of specified GitHub repository by PR activity.
 
     Usage: repo-insights lead-time "yuizho/repo-insights" "<your personal token of GitHub>"
     """
-    records = fetch_lead_time_record(repository_name, token, first_merged_date, base)
+    records = fetch_lead_time_record(
+        repository_name, personal_token, first_merged_date, base
+    )
 
     # TODO: ラベルのフィルターするならここで実施
     print("\t".join(LeadTimeRecord.get_fields_name()))
