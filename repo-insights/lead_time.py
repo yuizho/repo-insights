@@ -16,6 +16,11 @@ def create_to_load_time_records(json):
     return result
 
 
+def get_next_cursor(json):
+    edges = json["repository"]["pullRequests"]["edges"]
+    return edges[0]["cursor"] if edges else None
+
+
 class LeadTimeRecord:
     def __init__(self, title, url, mergedAt, firstCommitedAt):
         self.title = title
@@ -24,8 +29,8 @@ class LeadTimeRecord:
         self.firstCommitedAt = firstCommitedAt
 
     def __str__(self):
-        return f"{self.title}\t{self.url}\t{self.mergedAt - self.firstCommitedAt}"
+        return f"{self.title}\t{self.url}\t{self.mergedAt}\t{self.mergedAt - self.firstCommitedAt}"
 
     @classmethod
     def get_fields_name(cls):
-        return ["title", "url", "lead time(days)"]
+        return ["title", "url", "merged at", "lead time(days)"]
