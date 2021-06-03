@@ -8,7 +8,6 @@ fire = "*"
 gql = "*"
 
 [dev-packages]
-black = "*"
 flake8 = "*"
 
 [requires]
@@ -16,5 +15,4 @@ python_version = "3.9"
 
 [scripts]
 start = "python repo-insights/main.py"
-format = "black ."
 lint = "flake8 --show-source ."
