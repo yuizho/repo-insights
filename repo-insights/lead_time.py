@@ -1,4 +1,6 @@
 from github_api import DATETIME_FORMAT
+from github_api import Client
+from gql import gql
 from datetime import datetime
 
 
@@ -19,6 +21,63 @@ def create_to_load_time_records(json):
 def get_next_cursor(json):
     edges = json["repository"]["pullRequests"]["edges"]
     return edges[0]["cursor"] if edges else None
+
+
+def fetch_lead_time_record(repo_name, token, from_date, base):
+    # TODO: ソートして取ってこないと冪等性がなくなってしまう気がする。
+    query = gql(
+        """
+        query ($per_page: Int!, $owner: String!, $name: String!, $base: String!, $cursor: String) {
+            repository(owner: $owner, name: $name) {
+                pullRequests(last: $per_page, states: MERGED, baseRefName: $base, before: $cursor) {
+                    totalCount
+                    edges {
+                        cursor
+                        node {
+                            mergedAt
+                            title
+                            url
+                            commits(first: 1) {
+                                nodes {
+                                    commit {
+                                        committedDate
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        """
+    )
+    owner, name = repo_name.split("/")
+    per_page = 30
+    cursor = None
+    records = []
+
+    while True:
+        variables = {
+            "per_page": per_page,
+            "owner": owner,
+            "name": name,
+            "base": base,
+            "cursor": cursor,
+        }
+
+        resp = Client(token).execute(query, variables)
+        records_this_time = [
+            record
+            for record in create_to_load_time_records(resp)
+            if record.mergedAt > datetime.strptime(from_date, "%Y-%m-%d")
+        ]
+        records += records_this_time
+        if len(records_this_time) < per_page:
+            break
+
+        cursor = get_next_cursor(resp)
+
+    return records
 
 
 class LeadTimeRecord:
