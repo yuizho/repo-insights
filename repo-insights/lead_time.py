@@ -54,7 +54,7 @@ def fetch_lead_time_record(repo_name, token, from_date, base):
         """
     )
     owner, name = repo_name.split("/")
-    per_page = 30
+    per_page = 100
     cursor = None
     records = []
 
