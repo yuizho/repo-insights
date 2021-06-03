@@ -26,12 +26,11 @@ def get_next_cursor(json):
 
 @yaspin(text="Fetching PR data...")
 def fetch_lead_time_record(repo_name, token, from_date, base):
-    # TODO: ソートして取ってこないと冪等性がなくなってしまう気がする。
     query = gql(
         """
         query ($per_page: Int!, $owner: String!, $name: String!, $base: String!, $cursor: String) {
             repository(owner: $owner, name: $name) {
-                pullRequests(last: $per_page, states: MERGED, baseRefName: $base, before: $cursor) {
+                pullRequests(orderBy: {field: CREATED_AT, direction: ASC}, last: $per_page, states: MERGED, baseRefName: $base, before: $cursor) {
                     edges {
                         cursor
                         node {
