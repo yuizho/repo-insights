@@ -18,7 +18,7 @@ pytest = "*"
 python_version = "3.9"
 
 [scripts]
-start = "python repo-insights/main.py"
+start = "python src/main.py"
 lint = "flake8 --show-source ."
 
 [pipenv]

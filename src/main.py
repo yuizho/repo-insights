@@ -26,7 +26,7 @@ def lead_time(repository_name, personal_token, first_merged_date, base, label):
     """
     This command allows you to calculate lead time of specified GitHub repository by PR activity.
 
-    Usage: repo-insights lead-time "yuizho/repo-insights" "<your personal token of GitHub>"
+    Usage: src lead-time "yuizho/src" "<your personal token of GitHub>"
     """
     records = fetch_lead_time_record(repository_name, personal_token, first_merged_date, base)
 
