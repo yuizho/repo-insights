@@ -23,7 +23,8 @@ def cli():
 @click.option(
     "--base", "-b", default="master", show_default=True, help="the base branch of PR"
 )
-def lead_time(repository_name, personal_token, first_merged_date, base):
+@click.option("--label", "-l", help="the label name to filter PR data")
+def lead_time(repository_name, personal_token, first_merged_date, base, label):
     """
     This command allows you to calculate lead time of specified GitHub repository by PR activity.
 
@@ -33,10 +34,12 @@ def lead_time(repository_name, personal_token, first_merged_date, base):
         repository_name, personal_token, first_merged_date, base
     )
 
-    # TODO: ラベルのフィルターするならここで実施
+    filtered_records = (
+        records if label is None else [r for r in records if label in r.labels]
+    )
     print("\t".join(LeadTimeRecord.get_fields_name()))
-    for record in sorted(records, key=lambda r: r.mergedAt):
-        print(record)
+    for record in sorted(filtered_records, key=lambda r: r.mergedAt):
+        print("\t".join(record.get_fields()))
 
 
 def main():

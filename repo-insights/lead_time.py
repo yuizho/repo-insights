@@ -100,9 +100,15 @@ class LeadTimeRecord:
         self.mergedAt = mergedAt
         self.firstCommitedAt = firstCommitedAt
 
-    def __str__(self):
+    def get_fields(self):
         lead_time = self.mergedAt - self.firstCommitedAt
-        return f"{self.mergedAt}\t{self.title}\t{self.url}\t{', '.join(self.labels)}\t{round(lead_time / timedelta(days=1), 2)}"
+        return [
+            str(self.mergedAt),
+            self.title,
+            self.url,
+            ', '.join(self.labels),
+            str(round(lead_time / timedelta(days=1), 2))
+        ]
 
     @classmethod
     def get_fields_name(cls):
