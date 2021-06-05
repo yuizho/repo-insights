@@ -14,7 +14,7 @@ class TestLeadTimeRecord:
 
         assert actual == ["2021-01-02 00:00:00", "title", "url", "bug, improvement", "1.0"]
 
-    def test_get_fields(self):
+    def test_get_fields_name(self):
         actual = LeadTimeRecord(
             "title",
             "url",
