@@ -12,6 +12,7 @@ repo-insights = {editable = true, path = "."}
 [dev-packages]
 flake8 = "*"
 black = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.9"
