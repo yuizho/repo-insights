@@ -10,12 +10,19 @@ def create_to_load_time_records(json):
     for pr in json["repository"]["pullRequests"]["edges"]:
         title = pr["node"]["title"]
         url = pr["node"]["url"]
+        labels = [l["name"] for l in pr["node"]["labels"]["nodes"]]
         mergedAt = datetime.strptime(pr["node"]["mergedAt"], DATETIME_FORMAT)
         firstCommitedAt = datetime.strptime(
             pr["node"]["commits"]["nodes"][0]["commit"]["committedDate"],
             DATETIME_FORMAT,
         )
-        result.append(LeadTimeRecord(title, url, mergedAt, firstCommitedAt))
+        result.append(
+            LeadTimeRecord(
+                title,
+                url,
+                labels,
+                mergedAt,
+                firstCommitedAt))
     return result
 
 
@@ -37,6 +44,11 @@ def fetch_lead_time_record(repo_name, token, from_date, base):
                             mergedAt
                             title
                             url
+                            labels(first: 100) {
+                                nodes {
+                                    name
+                                }
+                            }
                             commits(first: 1) {
                                 nodes {
                                     commit {
@@ -81,16 +93,17 @@ def fetch_lead_time_record(repo_name, token, from_date, base):
 
 
 class LeadTimeRecord:
-    def __init__(self, title, url, mergedAt, firstCommitedAt):
+    def __init__(self, title, url, labels, mergedAt, firstCommitedAt):
         self.title = title
         self.url = url
+        self.labels = labels
         self.mergedAt = mergedAt
         self.firstCommitedAt = firstCommitedAt
 
     def __str__(self):
         lead_time = self.mergedAt - self.firstCommitedAt
-        return f"{self.mergedAt}\t{self.title}\t{self.url}\t{round(lead_time / timedelta(days=1), 2)}"
+        return f"{self.mergedAt}\t{self.title}\t{self.url}\t{', '.join(self.labels)}\t{round(lead_time / timedelta(days=1), 2)}"
 
     @classmethod
     def get_fields_name(cls):
-        return ["merged at", "title", "url", "lead time(day)"]
+        return ["merged at", "title", "url", "labels", "lead time(day)"]
