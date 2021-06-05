@@ -1,11 +1,9 @@
-name: test
+name: build
 
-on:
-  release:
-    types: [published]
+on: [push]
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
 
