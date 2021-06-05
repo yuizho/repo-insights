@@ -10,6 +10,7 @@ click = "*"
 
 [dev-packages]
 flake8 = "*"
+black = "*"
 
 [requires]
 python_version = "3.9"
@@ -17,3 +18,6 @@ python_version = "3.9"
 [scripts]
 start = "python repo-insights/main.py"
 lint = "flake8 --show-source ."
+
+[pipenv]
+allow_prereleases = true
