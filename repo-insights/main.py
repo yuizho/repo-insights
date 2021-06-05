@@ -20,9 +20,7 @@ def cli():
     show_default=True,
     help="first merged date to filter PR data (format: yyyy-mm-dd)",
 )
-@click.option(
-    "--base", "-b", default="master", show_default=True, help="the base branch of PR"
-)
+@click.option("--base", "-b", default="master", show_default=True, help="the base branch of PR")
 @click.option("--label", "-l", help="the label name to filter PR data")
 def lead_time(repository_name, personal_token, first_merged_date, base, label):
     """
@@ -30,15 +28,11 @@ def lead_time(repository_name, personal_token, first_merged_date, base, label):
 
     Usage: repo-insights lead-time "yuizho/repo-insights" "<your personal token of GitHub>"
     """
-    records = fetch_lead_time_record(
-        repository_name, personal_token, first_merged_date, base
-    )
+    records = fetch_lead_time_record(repository_name, personal_token, first_merged_date, base)
 
-    filtered_records = (
-        records if label is None else [r for r in records if label in r.labels]
-    )
+    filtered_records = records if label is None else [r for r in records if label in r.labels]
     print("\t".join(LeadTimeRecord.get_fields_name()))
-    for record in sorted(filtered_records, key=lambda r: r.mergedAt):
+    for record in sorted(filtered_records, key=lambda r: r.merged_at):
         print("\t".join(record.get_fields()))
 
 

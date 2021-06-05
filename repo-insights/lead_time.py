@@ -10,19 +10,13 @@ def create_to_load_time_records(json):
     for pr in json["repository"]["pullRequests"]["edges"]:
         title = pr["node"]["title"]
         url = pr["node"]["url"]
-        labels = [l["name"] for l in pr["node"]["labels"]["nodes"]]
-        mergedAt = datetime.strptime(pr["node"]["mergedAt"], DATETIME_FORMAT)
-        firstCommitedAt = datetime.strptime(
+        labels = [nodes["name"] for nodes in pr["node"]["labels"]["nodes"]]
+        merged_at = datetime.strptime(pr["node"]["mergedAt"], DATETIME_FORMAT)
+        first_committed_at = datetime.strptime(
             pr["node"]["commits"]["nodes"][0]["commit"]["committedDate"],
             DATETIME_FORMAT,
         )
-        result.append(
-            LeadTimeRecord(
-                title,
-                url,
-                labels,
-                mergedAt,
-                firstCommitedAt))
+        result.append(LeadTimeRecord(title, url, labels, merged_at, first_committed_at))
     return result
 
 
@@ -37,7 +31,13 @@ def fetch_lead_time_record(repo_name, token, from_date, base):
         """
         query ($per_page: Int!, $owner: String!, $name: String!, $base: String!, $cursor: String) {
             repository(owner: $owner, name: $name) {
-                pullRequests(orderBy: {field: CREATED_AT, direction: ASC}, last: $per_page, states: MERGED, baseRefName: $base, before: $cursor) {
+                pullRequests(
+                      orderBy: {field: CREATED_AT, direction: ASC},
+                      last: $per_page,
+                      states: MERGED,
+                      baseRefName: $base,
+                      before: $cursor
+                ) {
                     edges {
                         cursor
                         node {
@@ -81,7 +81,7 @@ def fetch_lead_time_record(repo_name, token, from_date, base):
         records_this_time = [
             record
             for record in create_to_load_time_records(resp)
-            if record.mergedAt > datetime.strptime(from_date, "%Y-%m-%d")
+            if record.merged_at > datetime.strptime(from_date, "%Y-%m-%d")
         ]
         records += records_this_time
         if len(records_this_time) < per_page:
@@ -93,21 +93,21 @@ def fetch_lead_time_record(repo_name, token, from_date, base):
 
 
 class LeadTimeRecord:
-    def __init__(self, title, url, labels, mergedAt, firstCommitedAt):
+    def __init__(self, title, url, labels, merged_at, first_committed_at):
         self.title = title
         self.url = url
         self.labels = labels
-        self.mergedAt = mergedAt
-        self.firstCommitedAt = firstCommitedAt
+        self.merged_at = merged_at
+        self.first_committed_at = first_committed_at
 
     def get_fields(self):
-        lead_time = self.mergedAt - self.firstCommitedAt
+        lead_time = self.merged_at - self.first_committed_at
         return [
-            str(self.mergedAt),
+            str(self.merged_at),
             self.title,
             self.url,
-            ', '.join(self.labels),
-            str(round(lead_time / timedelta(days=1), 2))
+            ", ".join(self.labels),
+            str(round(lead_time / timedelta(days=1), 2)),
         ]
 
     @classmethod
