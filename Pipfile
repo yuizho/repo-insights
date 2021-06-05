@@ -20,6 +20,7 @@ python_version = "3.9"
 [scripts]
 start = "python src/main.py"
 lint = "flake8 --show-source ."
+test = "pytest tests"
 
 [pipenv]
 allow_prereleases = true
