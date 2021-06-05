@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8ddf70760901787fdb75222813157c80ae6b15d4a1076bbee25f8033fecc0e29"
+            "sha256": "4b40d8e438fd0146895c16927dc406eaf4f97ab1683162995c9ef042c3525f03"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -89,6 +89,10 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==5.1.0"
+        },
+        "repo-insights": {
+            "editable": true,
+            "path": "."
         },
         "termcolor": {
             "hashes": [
