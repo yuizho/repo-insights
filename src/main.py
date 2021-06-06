@@ -18,13 +18,15 @@ def cli():
     "-f",
     default=ONE_MONTH_BEFORE,
     show_default=True,
-    help="first merged date to filter PR data (format: yyyy-mm-dd)",
+    help="first merged date to filter PR (format: yyyy-mm-dd)",
 )
-@click.option("--base", "-b", default="master", show_default=True, help="the base branch of PR")
-@click.option("--label", "-l", help="the label name to filter PR data")
+@click.option("--base", "-b", default="master", show_default=True, help="a base branch of PR")
+@click.option("--label", "-l", help="a label name to filter PR")
 def lead_time(repository_name, personal_token, first_merged_date, base, label):
     """
-    This command allows you to calculate lead time of specified GitHub repository by PR activity.
+    This command allows you to get a lead time of a specified GitHub repository by PR activity.
+    The lead time is calculated by (merged datetime - first commit datetime on the PR).
+    A result is output in TSV format. you can put the result into some spreadsheet application.
 
     Usage: src lead-time "yuizho/src" "<your personal token of GitHub>"
     """
