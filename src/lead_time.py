@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from yaspin import yaspin
 
 
-def create_to_load_time_records(json):
+def create_lead_time_records(json):
     result = []
     for pr in json["repository"]["pullRequests"]["edges"]:
         title = pr["node"]["title"]
@@ -26,7 +26,7 @@ def get_next_cursor(json):
 
 
 @yaspin(text="Fetching PR data...")
-def fetch_lead_time_record(repo_name, token, from_date, base):
+def fetch_lead_time_records(repo_name, token, from_date, base, per_page=100):
     query = gql(
         """
         query ($per_page: Int!, $owner: String!, $name: String!, $base: String!, $cursor: String) {
@@ -63,8 +63,8 @@ def fetch_lead_time_record(repo_name, token, from_date, base):
         }
         """
     )
+    client = Client(token)
     owner, name = repo_name.split("/")
-    per_page = 100
     cursor = None
     records = []
 
@@ -77,10 +77,10 @@ def fetch_lead_time_record(repo_name, token, from_date, base):
             "cursor": cursor,
         }
 
-        resp = Client(token).execute(query, variables)
+        resp = client.execute(query, variables)
         records_this_time = [
             record
-            for record in create_to_load_time_records(resp)
+            for record in create_lead_time_records(resp)
             if record.merged_at > datetime.strptime(from_date, "%Y-%m-%d")
         ]
         records += records_this_time

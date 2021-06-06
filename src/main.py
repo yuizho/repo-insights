@@ -1,5 +1,5 @@
 import click
-from lead_time import fetch_lead_time_record, LeadTimeRecord
+from lead_time import fetch_lead_time_records, LeadTimeRecord
 from datetime import datetime, timedelta
 
 ONE_MONTH_BEFORE = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
@@ -30,7 +30,7 @@ def lead_time(repository_name, personal_token, first_merged_date, base, label):
 
     Usage: src lead-time "yuizho/src" "<your personal token of GitHub>"
     """
-    records = fetch_lead_time_record(repository_name, personal_token, first_merged_date, base)
+    records = fetch_lead_time_records(repository_name, personal_token, first_merged_date, base)
 
     filtered_records = records if label is None else [r for r in records if label in r.labels]
     print("\t".join(LeadTimeRecord.get_fields_name()))
