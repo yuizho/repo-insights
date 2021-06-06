@@ -28,7 +28,7 @@ def lead_time(repository_name, personal_token, first_merged_date, base, label):
     The lead time is calculated by (merged datetime - first commit datetime on the PR).
     A result is output in TSV format. you can put the result into some spreadsheet application.
 
-    Usage: src lead-time "yuizho/src" "<your personal token of GitHub>"
+    Usage: src lead-time "yuizho/repo-insights" "<your personal token of GitHub>"
     """
     records = fetch_lead_time_records(repository_name, personal_token, first_merged_date, base)
 
