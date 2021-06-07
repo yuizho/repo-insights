@@ -38,6 +38,25 @@ def lead_time(repository_name, personal_token, first_merged_date, base, label):
         print("\t".join(record.get_fields()))
 
 
+@cli.command()
+@click.argument("repository_name")
+@click.argument("personal_token")
+@click.option(
+    "--first-date",
+    "-f",
+    default=ONE_MONTH_BEFORE,
+    show_default=True,
+    help="first date to filter Release",
+)
+def release_frequency(repository_name, personal_token, first_date):
+    """
+    This command allows you to get a release frequency of a specified GitHub repository by Release activity.
+
+    Usage: repo-insights release-frequency "yuizho/repo-insights" "<your personal token of GitHub>"
+    """
+    pass
+
+
 def main():
     cli()
 
