@@ -2,6 +2,8 @@ import click
 from lead_time import fetch_lead_time_records, LeadTimeRecord
 from datetime import datetime, timedelta
 
+from release_frequency import ReleaseRecord, fetch_release_records
+
 ONE_MONTH_BEFORE = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
 
 
@@ -54,7 +56,10 @@ def release_frequency(repository_name, personal_token, first_date):
 
     Usage: repo-insights release-frequency "yuizho/repo-insights" "<your personal token of GitHub>"
     """
-    pass
+    records = fetch_release_records(repository_name, personal_token, first_date)
+    print("\t".join(ReleaseRecord.get_fields_name()))
+    for record in sorted(records, key=lambda r: r.published_at):
+        print("\t".join(record.get_fields()))
 
 
 def main():
