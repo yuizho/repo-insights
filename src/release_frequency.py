@@ -1,19 +1,22 @@
 from github_api import DATETIME_FORMAT
 from github_api import Client
 from gql import gql
-from datetime import datetime
+from datetime import datetime, timedelta
 from yaspin import yaspin
 
 
 def create_release_records(json):
     result = []
+    prev_published_at = None
     for pr in json["repository"]["releases"]["edges"]:
         if pr["node"]["isDraft"]:
             continue
         title = pr["node"]["name"]
         url = pr["node"]["url"]
         published_at = datetime.strptime(pr["node"]["publishedAt"], DATETIME_FORMAT)
-        result.append(ReleaseRecord(title, url, published_at))
+        frequency = published_at - prev_published_at if prev_published_at else timedelta()
+        result.append(ReleaseRecord(title, url, published_at, frequency))
+        prev_published_at = published_at
     return result
 
 
@@ -73,14 +76,15 @@ def fetch_release_records(repo_name, token, from_date, per_page=100):
 
 
 class ReleaseRecord:
-    def __init__(self, title, url, published_at):
+    def __init__(self, title, url, published_at, frequency):
         self.title = title
         self.url = url
         self.published_at = published_at
+        self.frequency = frequency
 
     def get_fields(self):
-        return [str(self.published_at), self.title, self.url]
+        return [str(self.published_at), self.title, self.url, str(round(self.frequency / timedelta(days=1), 2))]
 
     @classmethod
     def get_fields_name(cls):
-        return ["published at", "title", "url"]
+        return ["published at", "title", "url", "release frequency(day)"]
