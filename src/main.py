@@ -20,7 +20,7 @@ def cli():
     "-f",
     default=ONE_MONTH_BEFORE,
     show_default=True,
-    help="first merged date to filter PR (format: yyyy-mm-dd)",
+    help="first merged date to filter PRs (format: yyyy-mm-dd)",
 )
 @click.option("--base", "-b", default="master", show_default=True, help="a base branch of PR")
 @click.option("--label", "-l", help="a label name to filter PR")
@@ -48,11 +48,12 @@ def lead_time(repository_name, personal_token, first_merged_date, base, label):
     "-f",
     default=ONE_MONTH_BEFORE,
     show_default=True,
-    help="first date to filter Release",
+    help="first date to filter Releases",
 )
 def release_frequency(repository_name, personal_token, first_date):
     """
     This command allows you to get a release frequency of a specified GitHub repository by Release activity.
+    A result is output in TSV format. you can put the result into some spreadsheet application.
 
     Usage: repo-insights release-frequency "yuizho/repo-insights" "<your personal token of GitHub>"
     """
