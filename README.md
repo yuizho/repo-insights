@@ -1,6 +1,7 @@
 # repo-insights
 
 A CLI tool to get Release Frequency and Lead Time for Changes by GitHub repository activity.
+A result is output in TSV format. you can put the result into some spreadsheet application.
 
 ## Getting Started
 
