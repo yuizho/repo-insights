@@ -1,9 +1,8 @@
 from datetime import datetime, timedelta
-from lead_time import LeadTimeRecord, create_lead_time_records, fetch_lead_time_records
-from github_api import Client
+from repoinsights.lead_time import LeadTimeRecord, create_lead_time_records, fetch_lead_time_records
+from repoinsights.github_api import Client
+from repoinsights.release_frequency import ReleaseRecord, fetch_release_records
 import pytest
-
-from release_frequency import ReleaseRecord, fetch_release_records
 
 
 class TestReleaseRecord:
@@ -23,7 +22,7 @@ class TestReleaseRecord:
 @pytest.fixture
 def github_client_mocks(mocker):
     client_mock = mocker.Mock(spec=Client)
-    mocker.patch("github_api.Client", return_value=client_mock)
+    mocker.patch("repoinsights.github_api.Client", return_value=client_mock)
     execute_mock = mocker.patch.object(Client, "execute")
     execute_mock.side_effect = [
         # first records

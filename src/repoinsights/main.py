@@ -1,8 +1,7 @@
 import click
-from lead_time import fetch_lead_time_records, LeadTimeRecord
+from repoinsights.lead_time import fetch_lead_time_records, LeadTimeRecord
+from repoinsights.release_frequency import ReleaseRecord, fetch_release_records
 from datetime import datetime, timedelta
-
-from release_frequency import ReleaseRecord, fetch_release_records
 
 ONE_MONTH_BEFORE = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
 

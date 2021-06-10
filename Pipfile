@@ -19,7 +19,7 @@ pytest-mock = "*"
 python_version = "3.9"
 
 [scripts]
-start = "python src/main.py"
+start = "python src/repoinsights/main.py"
 lint = "flake8 --show-source ."
 test = "pytest tests"
 

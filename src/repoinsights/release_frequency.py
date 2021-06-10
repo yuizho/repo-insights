@@ -1,6 +1,6 @@
 from attr import dataclass
-from github_api import DATETIME_FORMAT
-from github_api import Client
+from repoinsights.github_api import DATETIME_FORMAT
+from repoinsights.github_api import Client
 from gql import gql
 from datetime import datetime, timedelta
 from yaspin import yaspin
