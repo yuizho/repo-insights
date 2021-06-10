@@ -1,4 +1,6 @@
 # repo-insights
+[![Actions Status](https://github.com/yuizho/repo-insights/workflows/build/badge.svg)](https://github.com/yuizho/repo-insights/actions)
+![Python Version](https://img.shields.io/badge/Python-3.7%2B-blue)
 
 A CLI tool to get Release Frequency and Lead Time for Changes by GitHub repository activity.
 A result is output in TSV format. you can put the result into some spreadsheet application.
