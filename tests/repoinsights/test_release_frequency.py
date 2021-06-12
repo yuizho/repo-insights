@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from repoinsights.lead_time import LeadTimeRecord, create_lead_time_records, fetch_lead_time_records
 from repoinsights.github_api import Client
 from repoinsights.release_frequency import ReleaseRecord, fetch_release_records
 import pytest
