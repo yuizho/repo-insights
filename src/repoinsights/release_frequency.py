@@ -1,4 +1,4 @@
-from attr import dataclass
+from dataclasses import dataclass
 from repoinsights.github_api import DATETIME_FORMAT
 from repoinsights.github_api import Client
 from gql import gql
