@@ -34,7 +34,7 @@ def create_releases_records(releases):
 
 
 @yaspin(text="Fetching Release data...")
-def fetch_release_records(repo_name, token, from_date, per_page=100):
+def fetch_release_records(repo_name, token, from_date, per_page=30):
     query = gql(
         """
         query ($per_page: Int!, $owner: String!, $name: String!, $cursor: String) {
