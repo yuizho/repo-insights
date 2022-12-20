@@ -26,7 +26,7 @@ def get_next_cursor(json):
 
 
 @yaspin(text="Fetching PR data...")
-def fetch_lead_time_records(repo_name, token, from_date, base, per_page=100):
+def fetch_lead_time_records(repo_name, token, from_date, base, per_page=30):
     query = gql(
         """
         query ($per_page: Int!, $owner: String!, $name: String!, $base: String!, $cursor: String) {
