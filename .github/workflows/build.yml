@@ -30,6 +30,6 @@ jobs:
           ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
     - name: Install dependencies
       if: steps.pipenv-cache.outputs.cache-hit != 'true'
-      run: pipenv sync --dev
+      run: pipenv sync --dev --python $(which python)
     - name: Test
       run: pipenv run test
