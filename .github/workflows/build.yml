@@ -32,4 +32,4 @@ jobs:
       if: steps.pipenv-cache.outputs.cache-hit != 'true'
       run: pipenv sync --dev --python $(which python)
     - name: Test
-      run: pipenv run test --python $(which python)
+      run: pipenv run test
