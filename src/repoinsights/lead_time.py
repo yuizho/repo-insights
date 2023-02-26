@@ -8,6 +8,7 @@ def create_lead_time_records(json):
     result = []
     for pr in json["repository"]["pullRequests"]["edges"]:
         title = pr["node"]["title"]
+        author = pr["node"]["author"]["login"]
         url = pr["node"]["url"]
         labels = [nodes["name"] for nodes in pr["node"]["labels"]["nodes"]]
         merged_at = datetime.strptime(pr["node"]["mergedAt"], DATETIME_FORMAT)
@@ -15,7 +16,7 @@ def create_lead_time_records(json):
             pr["node"]["commits"]["nodes"][0]["commit"]["committedDate"],
             DATETIME_FORMAT,
         )
-        result.append(LeadTimeRecord(title, url, labels,
+        result.append(LeadTimeRecord(title, author, url, labels,
                       merged_at, first_committed_at))
     return result
 
@@ -42,6 +43,9 @@ def fetch_lead_time_records(repo_name, token, from_date, base, per_page=30):
                         node {
                             mergedAt
                             title
+                            author {
+                                login
+                            }
                             url
                             labels(first: 100) {
                                 nodes {
@@ -92,8 +96,9 @@ def fetch_lead_time_records(repo_name, token, from_date, base, per_page=30):
 
 
 class LeadTimeRecord:
-    def __init__(self, title, url, labels, merged_at, first_committed_at):
+    def __init__(self, title, author, url, labels, merged_at, first_committed_at):
         self.title = title
+        self.author = author
         self.url = url
         self.labels = labels
         self.merged_at = merged_at
@@ -104,6 +109,7 @@ class LeadTimeRecord:
         return [
             str(self.merged_at),
             self.title,
+            self.author,
             self.url,
             ", ".join(self.labels),
             str(round(lead_time / timedelta(days=1), 2)),
@@ -111,4 +117,4 @@ class LeadTimeRecord:
 
     @classmethod
     def get_fields_name(cls):
-        return ["merged at", "title", "url", "labels", "lead time(day)"]
+        return ["merged at", "title", "author", "url", "labels", "lead time(day)"]
