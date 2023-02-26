@@ -2,7 +2,6 @@ from repoinsights.github_api import DATETIME_FORMAT
 from repoinsights.github_api import Client
 from gql import gql
 from datetime import datetime, timedelta
-from yaspin import yaspin
 
 
 def create_lead_time_records(json):
@@ -16,7 +15,8 @@ def create_lead_time_records(json):
             pr["node"]["commits"]["nodes"][0]["commit"]["committedDate"],
             DATETIME_FORMAT,
         )
-        result.append(LeadTimeRecord(title, url, labels, merged_at, first_committed_at))
+        result.append(LeadTimeRecord(title, url, labels,
+                      merged_at, first_committed_at))
     return result
 
 
@@ -25,7 +25,6 @@ def get_next_cursor(json):
     return edges[0]["cursor"] if edges else None
 
 
-@yaspin(text="Fetching PR data...")
 def fetch_lead_time_records(repo_name, token, from_date, base, per_page=30):
     query = gql(
         """

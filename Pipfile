@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-yaspin = "*"
 click = "*"
 repo-insights = {editable = true, path = "."}
 gql = "==v2.0.0"

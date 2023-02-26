@@ -3,7 +3,6 @@ from repoinsights.github_api import DATETIME_FORMAT
 from repoinsights.github_api import Client
 from gql import gql
 from datetime import datetime, timedelta
-from yaspin import yaspin
 
 
 def create_releases(json):
@@ -53,7 +52,6 @@ def create_releases_records(releases):
     return records
 
 
-@yaspin(text="Fetching Release data...")
 def fetch_release_records(repo_name, token, from_date, per_page=30):
     query = gql(
         """
