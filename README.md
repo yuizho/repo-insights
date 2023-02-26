@@ -32,8 +32,7 @@ Usage: repo-insights lead-time [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
 
   This command allows you to get a lead time of a specified GitHub repository
   by PR activity. The lead time is calculated by (merged datetime - first
-  commit datetime on the PR). A result is output in TSV format. you can put
-  the result into some spreadsheet application.
+  commit datetime on the PR). A result is output in CSV format.
 
   Usage: repo-insights lead-time "yuizho/repo-insights" "<your personal token
   of GitHub>"
@@ -43,6 +42,7 @@ Options:
                                 mm-dd)  [default: 30 days before]
   -b, --base TEXT               a base branch of PR  [default: master]
   -l, --label TEXT              a label name to filter PR
+  -d, --delimiter TEXT          a delimiter character to separate fields of a result  [default: ,]
   --help                        Show this message and exit.
 ```
 
@@ -53,14 +53,14 @@ Usage: repo-insights release-frequency [OPTIONS] REPOSITORY_NAME
                                        PERSONAL_TOKEN
 
   This command allows you to get a release frequency of a specified GitHub
-  repository by Release activity. A result is output in TSV format. you can
-  put the result into some spreadsheet application.
+  repository by Release activity. A result is output in CSV format.
 
   Usage: repo-insights release-frequency "yuizho/repo-insights" "<your
   personal token of GitHub>"
 
 Options:
   -f, --first-date TEXT  first date to filter Releases  [default: 30 days before]
+  -d, --delimiter TEXT   a delimiter character to separate fields of a result  [default: ,]
   --help                 Show this message and exit.
 ```
 

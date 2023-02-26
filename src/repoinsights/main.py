@@ -8,9 +8,10 @@ import csv
 ONE_MONTH_BEFORE = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
 
 
-def to_csv(headers, rows):
+def to_csv(headers, rows, delimiter):
+    delimiter = delimiter.replace("\\t", "\t").replace("\\n", "\n")
     with StringIO() as string_io:
-        writer = csv.writer(string_io)
+        writer = csv.writer(string_io, delimiter=delimiter)
         writer.writerow(headers)
         writer.writerows(rows)
         return string_io.getvalue()
@@ -33,7 +34,8 @@ def cli():
 )
 @click.option("--base", "-b", default="master", show_default=True, help="a base branch of PR")
 @click.option("--label", "-l", help="a label name to filter PR")
-def lead_time(repository_name, personal_token, first_merged_date, base, label):
+@click.option("--delimiter", "-d", default=",", show_default=True, help="a delimiter character to separate fields of a result")
+def lead_time(repository_name, personal_token, first_merged_date, base, label, delimiter):
     """
     This command allows you to get a lead time of a specified GitHub repository by PR activity.
     The lead time is calculated by (merged datetime - first commit datetime on the PR).
@@ -55,7 +57,8 @@ def lead_time(repository_name, personal_token, first_merged_date, base, label):
         to_csv(
             LeadTimeRecord.get_fields_name(),
             [r.get_fields()
-             for r in sorted(filtered_records, key=lambda r: r.merged_at)]
+             for r in sorted(filtered_records, key=lambda r: r.merged_at)],
+            delimiter
         )
     )
 
@@ -70,7 +73,8 @@ def lead_time(repository_name, personal_token, first_merged_date, base, label):
     show_default=True,
     help="first date to filter Releases",
 )
-def release_frequency(repository_name, personal_token, first_date):
+@click.option("--delimiter", "-d", default=",", show_default=True, help="a delimiter character to separate fields of a result")
+def release_frequency(repository_name, personal_token, first_date, delimiter):
     """
     This command allows you to get a release frequency of a specified GitHub repository by Release activity.
     A result is output in CSV format.
@@ -86,7 +90,8 @@ def release_frequency(repository_name, personal_token, first_date):
     print(
         to_csv(
             ReleaseRecord.get_fields_name(),
-            [r.get_fields() for r in sorted(records, key=lambda r: r.published_at)]
+            [r.get_fields() for r in sorted(records, key=lambda r: r.published_at)],
+            delimiter
         )
     )
 
