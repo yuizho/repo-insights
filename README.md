@@ -1,4 +1,5 @@
 # repo-insights
+
 [![Actions Status](https://github.com/yuizho/repo-insights/workflows/build/badge.svg)](https://github.com/yuizho/repo-insights/actions)
 ![Python Version](https://img.shields.io/badge/Python-3.7%2B-blue)
 
@@ -25,6 +26,7 @@ Commands:
 ```
 
 ### lead-time
+
 ```
 Usage: repo-insights lead-time [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
 
@@ -45,6 +47,7 @@ Options:
 ```
 
 ### release-frequency
+
 ```
 Usage: repo-insights release-frequency [OPTIONS] REPOSITORY_NAME
                                        PERSONAL_TOKEN
@@ -59,6 +62,26 @@ Usage: repo-insights release-frequency [OPTIONS] REPOSITORY_NAME
 Options:
   -f, --first-date TEXT  first date to filter Releases  [default: 30 days before]
   --help                 Show this message and exit.
+```
+
+## For Developers
+
+### Setup
+
+```
+$ pipenv sync --dev
+```
+
+### Run repo-insights via pipenv
+
+```
+$ pipenv run repo-insights --help
+```
+
+### Run tests
+
+```
+$ pipenv run test
 ```
 
 ## License
