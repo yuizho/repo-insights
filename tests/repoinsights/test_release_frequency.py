@@ -6,16 +6,29 @@ import pytest
 
 class TestReleaseRecord:
     def test_get_fields(self):
-        actual = ReleaseRecord("title", "url", datetime.strptime("2021-01-01", "%Y-%m-%d"), timedelta(1)).get_fields()
+        actual = ReleaseRecord(
+            "title",
+            "url",
+            "user",
+            datetime.strptime("2021-01-01", "%Y-%m-%d"),
+            timedelta(1)
+        ).get_fields()
 
-        assert actual == ["2021-01-01 00:00:00", "title", "url", "1.0"]
+        assert actual == ["2021-01-01 00:00:00", "title", "url", "user", "1.0"]
 
     def test_get_fields_name(self):
         actual = ReleaseRecord(
-            "title", "url", datetime.strptime("2021-01-01", "%Y-%m-%d"), timedelta(1)
+            "title", "url", "user", datetime.strptime(
+                "2021-01-01", "%Y-%m-%d"), timedelta(1)
         ).get_fields_name()
 
-        assert actual == ["published at", "title", "url", "release frequency(day)"]
+        assert actual == [
+            "published at",
+            "title",
+            "url",
+            "author",
+            "release frequency(day)"
+        ]
 
 
 @pytest.fixture
@@ -36,6 +49,9 @@ def github_client_mocks(mocker):
                                 "publishedAt": "2020-01-30T00:00:00Z",
                                 "name": "title1",
                                 "url": "url1",
+                                "author": {
+                                    "login": "user1"
+                                },
                             },
                         },
                         {
@@ -45,6 +61,9 @@ def github_client_mocks(mocker):
                                 "publishedAt": "2020-02-01T00:00:00Z",
                                 "name": "title2",
                                 "url": "url2",
+                                "author": {
+                                    "login": "user2"
+                                },
                             },
                         },
                     ],
@@ -63,6 +82,9 @@ def github_client_mocks(mocker):
                                 "publishedAt": "2020-02-02T00:00:00Z",
                                 "name": "title3",
                                 "url": "url3",
+                                "author": {
+                                    "login": "user3"
+                                },
                             },
                         },
                     ],
@@ -76,7 +98,8 @@ def github_client_mocks(mocker):
 
 def test_fetch_release_records_just_one_time_request(mocker, github_client_mocks):
     # when
-    actual = fetch_release_records("yuizho/my-repo", "my-token", "2020-01-01", 3)
+    actual = fetch_release_records(
+        "yuizho/my-repo", "my-token", "2020-01-01", 3)
 
     # then
     assert github_client_mocks.call_count == 1
@@ -93,17 +116,22 @@ def test_fetch_release_records_just_one_time_request(mocker, github_client_mocks
     ]
     assert actual[0].title == "title1"
     assert actual[0].url == "url1"
-    assert actual[0].published_at == datetime.strptime("2020-01-30T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+    assert actual[0].author == "user1"
+    assert actual[0].published_at == datetime.strptime(
+        "2020-01-30T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].frequency == timedelta(0)
     assert actual[1].title == "title2"
     assert actual[1].url == "url2"
-    assert actual[1].published_at == datetime.strptime("2020-02-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+    assert actual[1].author == "user2"
+    assert actual[1].published_at == datetime.strptime(
+        "2020-02-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].frequency == timedelta(2)
 
 
 def test_fetch_release_records_multiple_time_request(mocker, github_client_mocks):
     # when
-    actual = fetch_release_records("yuizho/my-repo", "my-token", "2020-01-01", 2)
+    actual = fetch_release_records(
+        "yuizho/my-repo", "my-token", "2020-01-01", 2)
 
     # then
     assert github_client_mocks.call_count == 2
@@ -129,13 +157,19 @@ def test_fetch_release_records_multiple_time_request(mocker, github_client_mocks
     ]
     assert actual[0].title == "title1"
     assert actual[0].url == "url1"
-    assert actual[0].published_at == datetime.strptime("2020-01-30T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+    assert actual[0].author == "user1"
+    assert actual[0].published_at == datetime.strptime(
+        "2020-01-30T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].frequency == timedelta(0)
     assert actual[1].title == "title2"
     assert actual[1].url == "url2"
-    assert actual[1].published_at == datetime.strptime("2020-02-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+    assert actual[1].author == "user2"
+    assert actual[1].published_at == datetime.strptime(
+        "2020-02-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].frequency == timedelta(2)
     assert actual[2].title == "title3"
     assert actual[2].url == "url3"
-    assert actual[2].published_at == datetime.strptime("2020-02-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+    assert actual[2].author == "user3"
+    assert actual[2].published_at == datetime.strptime(
+        "2020-02-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[2].frequency == timedelta(1)

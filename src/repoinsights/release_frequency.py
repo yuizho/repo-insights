@@ -13,8 +13,19 @@ def create_releases(json):
             continue
         title = pr["node"]["name"]
         url = pr["node"]["url"]
-        published_at = datetime.strptime(pr["node"]["publishedAt"], DATETIME_FORMAT)
-        result.append(Release(title, url, published_at))
+        author = pr["node"]["author"]["login"]
+        published_at = datetime.strptime(
+            pr["node"]["publishedAt"],
+            DATETIME_FORMAT
+        )
+        result.append(
+            Release(
+                title,
+                url,
+                author,
+                published_at
+            )
+        )
     return result
 
 
@@ -27,8 +38,17 @@ def create_releases_records(releases):
     records = []
     prev_published_at = None
     for release in sorted(releases, key=lambda r: r.published_at):
-        frequency = release.published_at - prev_published_at if prev_published_at else timedelta()
-        records.append(ReleaseRecord(release.title, release.url, release.published_at, frequency))
+        frequency = release.published_at - \
+            prev_published_at if prev_published_at else timedelta()
+        records.append(
+            ReleaseRecord(
+                release.title,
+                release.url,
+                release.author,
+                release.published_at,
+                frequency
+            )
+        )
         prev_published_at = release.published_at
     return records
 
@@ -48,6 +68,9 @@ def fetch_release_records(repo_name, token, from_date, per_page=30):
                             publishedAt
                             name
                             url
+                            author {
+                                login
+                            }
                         }
                     }
                 }
@@ -87,19 +110,21 @@ def fetch_release_records(repo_name, token, from_date, per_page=30):
 class Release:
     title: str
     url: str
+    author: str
     published_at: datetime
 
 
 class ReleaseRecord:
-    def __init__(self, title, url, published_at, frequency):
+    def __init__(self, title, url, author, published_at, frequency):
         self.title = title
         self.url = url
         self.published_at = published_at
+        self.author = author
         self.frequency = frequency
 
     def get_fields(self):
-        return [str(self.published_at), self.title, self.url, str(round(self.frequency / timedelta(days=1), 2))]
+        return [str(self.published_at), self.title, self.url, self.author, str(round(self.frequency / timedelta(days=1), 2))]
 
     @classmethod
     def get_fields_name(cls):
-        return ["published at", "title", "url", "release frequency(day)"]
+        return ["published at", "title", "url", "author", "release frequency(day)"]
