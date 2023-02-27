@@ -16,8 +16,18 @@ def create_pr_metrics_records(json):
             pr["node"]["commits"]["nodes"][0]["commit"]["committedDate"],
             DATETIME_FORMAT,
         )
-        result.append(PrMetricsRecord(title, author, url, labels,
-                      merged_at, first_committed_at))
+        total_comments_count = pr["node"]["totalCommentsCount"]
+        result.append(
+            PrMetricsRecord(
+                title,
+                author,
+                url,
+                labels,
+                total_comments_count,
+                merged_at,
+                first_committed_at,
+            )
+        )
     return result
 
 
@@ -59,6 +69,7 @@ def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=30):
                                     }
                                 }
                             }
+                            totalCommentsCount
                         }
                     }
                 }
@@ -96,11 +107,12 @@ def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=30):
 
 
 class PrMetricsRecord:
-    def __init__(self, title, author, url, labels, merged_at, first_committed_at):
+    def __init__(self, title, author, url, labels, total_comments_count, merged_at, first_committed_at):
         self.title = title
         self.author = author
         self.url = url
         self.labels = labels
+        self.total_comments_count = total_comments_count
         self.merged_at = merged_at
         self.first_committed_at = first_committed_at
 
@@ -112,9 +124,10 @@ class PrMetricsRecord:
             self.author,
             self.url,
             ", ".join(self.labels),
+            self.total_comments_count,
             str(round(time_taken_to_merge / timedelta(days=1), 2)),
         ]
 
     @classmethod
     def get_fields_name(cls):
-        return ["merged at", "title", "author", "url", "labels", "time taken to merge(day)"]
+        return ["merged at", "title", "author", "url", "labels", "total comments count", "time taken to merge(day)"]

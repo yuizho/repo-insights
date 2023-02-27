@@ -11,12 +11,20 @@ class TestPrMetricsRecord:
             "user",
             "url",
             ["bug", "improvement"],
+            3,
             datetime.strptime("2021-01-02", "%Y-%m-%d"),
             datetime.strptime("2021-01-01", "%Y-%m-%d"),
         ).get_fields()
 
-        assert actual == ["2021-01-02 00:00:00",
-                          "title", "user", "url", "bug, improvement", "1.0"]
+        assert actual == [
+            "2021-01-02 00:00:00",
+            "title",
+            "user",
+            "url",
+            "bug, improvement",
+            3,
+            "1.0"
+        ]
 
     def test_get_fields_name(self):
         actual = PrMetricsRecord(
@@ -24,6 +32,7 @@ class TestPrMetricsRecord:
             "user",
             "url",
             ["bug", "improvement"],
+            3,
             datetime.strptime("2021-01-02", "%Y-%m-%d"),
             datetime.strptime("2021-01-01", "%Y-%m-%d"),
         ).get_fields_name()
@@ -34,6 +43,7 @@ class TestPrMetricsRecord:
             "author",
             "url",
             "labels",
+            "total comments count",
             "time taken to merge(day)"
         ]
 
@@ -61,6 +71,7 @@ def github_client_mocks(mocker):
                                 "url": "url1",
                                 "labels": {"nodes": [{"name": "label-1-1"}, {"name": "label-1-2"}]},
                                 "commits": {"nodes": [{"commit": {"committedDate": "2020-01-02T00:00:00Z"}}]},
+                                "totalCommentsCount": 1,
                             },
                         },
                         {
@@ -75,6 +86,7 @@ def github_client_mocks(mocker):
                                 "url": "url2",
                                 "labels": {"nodes": []},
                                 "commits": {"nodes": [{"commit": {"committedDate": "2020-02-02T00:00:00Z"}}]},
+                                "totalCommentsCount": 2,
                             },
                         },
                     ],
@@ -98,6 +110,7 @@ def github_client_mocks(mocker):
                                 "url": "url3",
                                 "labels": {"nodes": [{"name": "label-3-1"}]},
                                 "commits": {"nodes": [{"commit": {"committedDate": "2020-03-02T00:00:00Z"}}]},
+                                "totalCommentsCount": 3,
                             },
                         },
                     ],
@@ -132,6 +145,7 @@ def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mo
     assert actual[0].author == "user1"
     assert actual[0].url == "url1"
     assert actual[0].labels == ["label-1-1", "label-1-2"]
+    assert actual[0].total_comments_count == 1
     assert actual[0].merged_at == datetime.strptime(
         "2020-01-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].first_committed_at == datetime.strptime(
@@ -140,6 +154,7 @@ def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mo
     assert actual[1].author == "user2"
     assert actual[1].url == "url2"
     assert actual[1].labels == []
+    assert actual[1].total_comments_count == 2
     assert actual[1].merged_at == datetime.strptime(
         "2020-02-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].first_committed_at == datetime.strptime(
@@ -179,6 +194,7 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
     assert actual[0].author == "user1"
     assert actual[0].url == "url1"
     assert actual[0].labels == ["label-1-1", "label-1-2"]
+    assert actual[0].total_comments_count == 1
     assert actual[0].merged_at == datetime.strptime(
         "2020-01-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].first_committed_at == datetime.strptime(
@@ -187,6 +203,7 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
     assert actual[1].author == "user2"
     assert actual[1].url == "url2"
     assert actual[1].labels == []
+    assert actual[1].total_comments_count == 2
     assert actual[1].merged_at == datetime.strptime(
         "2020-02-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].first_committed_at == datetime.strptime(
@@ -195,6 +212,7 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
     assert actual[2].author == "user3"
     assert actual[2].url == "url3"
     assert actual[2].labels == ["label-3-1"]
+    assert actual[2].total_comments_count == 3
     assert actual[2].merged_at == datetime.strptime(
         "2020-03-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[2].first_committed_at == datetime.strptime(
