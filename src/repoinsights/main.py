@@ -32,7 +32,7 @@ def cli():
     show_default=True,
     help="first merged date to filter PRs (format: yyyy-mm-dd)",
 )
-@click.option("--base", "-b", default="master", show_default=True, help="a base branch of PR")
+@click.option("--base", "-b", default=None, help="a base branch to filter PR")
 @click.option("--label", "-l", help="a label name to filter PR")
 @click.option("--delimiter", "-d", default=",", show_default=True, help="a delimiter character to separate fields of a result")
 def pr_metrics(repository_name, personal_token, first_merged_date, base, label, delimiter):

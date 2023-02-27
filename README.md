@@ -39,7 +39,7 @@ Usage: repo-insights pr-metrics [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
 Options:
   -f, --first-merged-date TEXT  first merged date to filter PRs (format: yyyy-
                                 mm-dd)  [default: 30 days before]
-  -b, --base TEXT               a base branch of PR  [default: master]
+  -b, --base TEXT               a base branch to filter PR
   -l, --label TEXT              a label name to filter PR
   -d, --delimiter TEXT          a delimiter character to separate fields of a result  [default: ,]
   --help                        Show this message and exit.
