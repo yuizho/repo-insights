@@ -1,5 +1,5 @@
 import click
-from repoinsights.lead_time import fetch_lead_time_records, LeadTimeRecord
+from repoinsights.pr_metrics import fetch_pr_metrics_records, PrMetricsRecord
 from repoinsights.release_frequency import ReleaseRecord, fetch_release_records
 from datetime import datetime, timedelta
 from io import StringIO
@@ -35,15 +35,15 @@ def cli():
 @click.option("--base", "-b", default="master", show_default=True, help="a base branch of PR")
 @click.option("--label", "-l", help="a label name to filter PR")
 @click.option("--delimiter", "-d", default=",", show_default=True, help="a delimiter character to separate fields of a result")
-def lead_time(repository_name, personal_token, first_merged_date, base, label, delimiter):
+def pr_metrics(repository_name, personal_token, first_merged_date, base, label, delimiter):
     """
-    This command allows you to get a lead time of a specified GitHub repository by PR activity.
-    The lead time is calculated by (merged datetime - first commit datetime on the PR).
+    This command allows you to get PR metrics of a specified GitHub repository by PR activity.
+    Time taken to merge field of a result is calculated by (merged datetime - first commit datetime on the PR).
     A result is output in CSV format.
 
-    Usage: repo-insights lead-time "yuizho/repo-insights" "<your personal token of GitHub>"
+    Usage: repo-insights pr-metrics "yuizho/repo-insights" "<your personal token of GitHub>"
     """
-    records = fetch_lead_time_records(
+    records = fetch_pr_metrics_records(
         repository_name,
         personal_token,
         first_merged_date,
@@ -55,7 +55,7 @@ def lead_time(repository_name, personal_token, first_merged_date, base, label, d
 
     print(
         to_csv(
-            LeadTimeRecord.get_fields_name(),
+            PrMetricsRecord.get_fields_name(),
             [r.get_fields()
              for r in sorted(filtered_records, key=lambda r: r.merged_at)],
             delimiter

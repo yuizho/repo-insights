@@ -4,7 +4,7 @@ from gql import gql
 from datetime import datetime, timedelta
 
 
-def create_lead_time_records(json):
+def create_pr_metrics_records(json):
     result = []
     for pr in json["repository"]["pullRequests"]["edges"]:
         title = pr["node"]["title"]
@@ -16,7 +16,7 @@ def create_lead_time_records(json):
             pr["node"]["commits"]["nodes"][0]["commit"]["committedDate"],
             DATETIME_FORMAT,
         )
-        result.append(LeadTimeRecord(title, author, url, labels,
+        result.append(PrMetricsRecord(title, author, url, labels,
                       merged_at, first_committed_at))
     return result
 
@@ -26,7 +26,7 @@ def get_next_cursor(json):
     return edges[0]["cursor"] if edges else None
 
 
-def fetch_lead_time_records(repo_name, token, from_date, base, per_page=30):
+def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=30):
     query = gql(
         """
         query ($per_page: Int!, $owner: String!, $name: String!, $base: String!, $cursor: String) {
@@ -83,7 +83,7 @@ def fetch_lead_time_records(repo_name, token, from_date, base, per_page=30):
         resp = client.execute(query, variables)
         records_this_time = [
             record
-            for record in create_lead_time_records(resp)
+            for record in create_pr_metrics_records(resp)
             if record.merged_at > datetime.strptime(from_date, "%Y-%m-%d")
         ]
         records += records_this_time
@@ -95,7 +95,7 @@ def fetch_lead_time_records(repo_name, token, from_date, base, per_page=30):
     return records
 
 
-class LeadTimeRecord:
+class PrMetricsRecord:
     def __init__(self, title, author, url, labels, merged_at, first_committed_at):
         self.title = title
         self.author = author
@@ -105,16 +105,16 @@ class LeadTimeRecord:
         self.first_committed_at = first_committed_at
 
     def get_fields(self):
-        lead_time = self.merged_at - self.first_committed_at
+        time_taken_to_merge = self.merged_at - self.first_committed_at
         return [
             str(self.merged_at),
             self.title,
             self.author,
             self.url,
             ", ".join(self.labels),
-            str(round(lead_time / timedelta(days=1), 2)),
+            str(round(time_taken_to_merge / timedelta(days=1), 2)),
         ]
 
     @classmethod
     def get_fields_name(cls):
-        return ["merged at", "title", "author", "url", "labels", "lead time(day)"]
+        return ["merged at", "title", "author", "url", "labels", "time taken to merge(day)"]

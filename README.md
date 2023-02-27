@@ -21,20 +21,19 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  lead-time          This command allows you to get a lead time of a...
+  pr-metrics         This command allows you to get PR metrics of a...
   release-frequency  This command allows you to get a release frequency...
 ```
 
-### lead-time
+### pr-metrics
 
 ```
-Usage: repo-insights lead-time [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
+Usage: repo-insights pr-metrics [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
 
-  This command allows you to get a lead time of a specified GitHub repository
-  by PR activity. The lead time is calculated by (merged datetime - first
-  commit datetime on the PR). A result is output in CSV format.
+  This command allows you to get PR metrics of a specified GitHub repository by PR activity. Time taken to merge field of a result is calculated by (merged datetime - first commit datetime on the PR).
+  A result is output in CSV format.
 
-  Usage: repo-insights lead-time "yuizho/repo-insights" "<your personal token
+  Usage: repo-insights pr-metrics "yuizho/repo-insights" "<your personal token
   of GitHub>"
 
 Options:

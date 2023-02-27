@@ -1,12 +1,12 @@
 from datetime import datetime
-from repoinsights.lead_time import LeadTimeRecord, create_lead_time_records, fetch_lead_time_records
+from repoinsights.pr_metrics import PrMetricsRecord, create_pr_metrics_records, fetch_pr_metrics_records
 from repoinsights.github_api import Client
 import pytest
 
 
-class TestLeadTimeRecord:
+class TestPrMetricsRecord:
     def test_get_fields(self):
-        actual = LeadTimeRecord(
+        actual = PrMetricsRecord(
             "title",
             "user",
             "url",
@@ -19,7 +19,7 @@ class TestLeadTimeRecord:
                           "title", "user", "url", "bug, improvement", "1.0"]
 
     def test_get_fields_name(self):
-        actual = LeadTimeRecord(
+        actual = PrMetricsRecord(
             "title",
             "user",
             "url",
@@ -34,7 +34,7 @@ class TestLeadTimeRecord:
             "author",
             "url",
             "labels",
-            "lead time(day)"
+            "time taken to merge(day)"
         ]
 
 
@@ -109,9 +109,9 @@ def github_client_mocks(mocker):
     yield execute_mock
 
 
-def test_fetch_lead_time_records_just_one_time_request(mocker, github_client_mocks):
+def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mocks):
     # when
-    actual = fetch_lead_time_records(
+    actual = fetch_pr_metrics_records(
         "yuizho/my-repo", "my-token", "2020-01-01", "master", 3)
 
     # then
@@ -146,9 +146,9 @@ def test_fetch_lead_time_records_just_one_time_request(mocker, github_client_moc
         "2020-02-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
 
 
-def test_fetch_lead_time_records_multiple_times_request(mocker, github_client_mocks):
+def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_mocks):
     # when
-    actual = fetch_lead_time_records(
+    actual = fetch_pr_metrics_records(
         "yuizho/my-repo", "my-token", "2020-01-01", "master", 2)
 
     # then
@@ -201,9 +201,9 @@ def test_fetch_lead_time_records_multiple_times_request(mocker, github_client_mo
         "2020-03-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
 
 
-def test_create_lead_time_records_empty():
+def test_create_pr_metrics_records_empty():
     # when
-    actual = create_lead_time_records(
+    actual = create_pr_metrics_records(
         {"repository": {"pullRequests": {"edges": []}}})
 
     # then
