@@ -17,6 +17,9 @@ def create_pr_metrics_records(json):
             DATETIME_FORMAT,
         )
         total_comments_count = pr["node"]["totalCommentsCount"]
+        changed_files = pr["node"]["changedFiles"]
+        code_additions = pr["node"]["additions"]
+        code_deletions = pr["node"]["deletions"]
         result.append(
             PrMetricsRecord(
                 title,
@@ -24,6 +27,9 @@ def create_pr_metrics_records(json):
                 url,
                 labels,
                 total_comments_count,
+                changed_files,
+                code_additions,
+                code_deletions,
                 merged_at,
                 first_committed_at,
             )
@@ -70,6 +76,9 @@ def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=30):
                                 }
                             }
                             totalCommentsCount
+                            changedFiles
+                            additions
+                            deletions
                         }
                     }
                 }
@@ -107,12 +116,27 @@ def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=30):
 
 
 class PrMetricsRecord:
-    def __init__(self, title, author, url, labels, total_comments_count, merged_at, first_committed_at):
+    def __init__(
+        self,
+        title,
+        author,
+        url,
+        labels,
+        total_comments_count,
+        changed_files,
+        code_additions,
+        code_deletions,
+        merged_at,
+        first_committed_at
+    ):
         self.title = title
         self.author = author
         self.url = url
         self.labels = labels
         self.total_comments_count = total_comments_count
+        self.changed_files = changed_files
+        self.code_additions = code_additions
+        self.code_deletions = code_deletions
         self.merged_at = merged_at
         self.first_committed_at = first_committed_at
 
@@ -125,9 +149,23 @@ class PrMetricsRecord:
             self.url,
             ", ".join(self.labels),
             self.total_comments_count,
+            self.changed_files,
+            self.code_additions,
+            self.code_deletions,
             str(round(time_taken_to_merge / timedelta(days=1), 2)),
         ]
 
     @classmethod
     def get_fields_name(cls):
-        return ["merged at", "title", "author", "url", "labels", "total comments count", "time taken to merge(day)"]
+        return [
+            "merged at",
+            "title",
+            "author",
+            "url",
+            "labels",
+            "total comments count",
+            "changed files",
+            "code additions",
+            "code deletions",
+            "time taken to merge(day)"
+        ]

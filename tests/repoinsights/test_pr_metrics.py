@@ -12,6 +12,9 @@ class TestPrMetricsRecord:
             "url",
             ["bug", "improvement"],
             3,
+            1,
+            11,
+            10,
             datetime.strptime("2021-01-02", "%Y-%m-%d"),
             datetime.strptime("2021-01-01", "%Y-%m-%d"),
         ).get_fields()
@@ -23,6 +26,9 @@ class TestPrMetricsRecord:
             "url",
             "bug, improvement",
             3,
+            1,
+            11,
+            10,
             "1.0"
         ]
 
@@ -33,6 +39,9 @@ class TestPrMetricsRecord:
             "url",
             ["bug", "improvement"],
             3,
+            1,
+            11,
+            10,
             datetime.strptime("2021-01-02", "%Y-%m-%d"),
             datetime.strptime("2021-01-01", "%Y-%m-%d"),
         ).get_fields_name()
@@ -44,6 +53,9 @@ class TestPrMetricsRecord:
             "url",
             "labels",
             "total comments count",
+            "changed files",
+            "code additions",
+            "code deletions",
             "time taken to merge(day)"
         ]
 
@@ -72,6 +84,9 @@ def github_client_mocks(mocker):
                                 "labels": {"nodes": [{"name": "label-1-1"}, {"name": "label-1-2"}]},
                                 "commits": {"nodes": [{"commit": {"committedDate": "2020-01-02T00:00:00Z"}}]},
                                 "totalCommentsCount": 1,
+                                "changedFiles": 11,
+                                "additions": 111,
+                                "deletions": 1111,
                             },
                         },
                         {
@@ -87,6 +102,9 @@ def github_client_mocks(mocker):
                                 "labels": {"nodes": []},
                                 "commits": {"nodes": [{"commit": {"committedDate": "2020-02-02T00:00:00Z"}}]},
                                 "totalCommentsCount": 2,
+                                "changedFiles": 22,
+                                "additions": 222,
+                                "deletions": 2222,
                             },
                         },
                     ],
@@ -111,6 +129,9 @@ def github_client_mocks(mocker):
                                 "labels": {"nodes": [{"name": "label-3-1"}]},
                                 "commits": {"nodes": [{"commit": {"committedDate": "2020-03-02T00:00:00Z"}}]},
                                 "totalCommentsCount": 3,
+                                "changedFiles": 33,
+                                "additions": 333,
+                                "deletions": 3333,
                             },
                         },
                     ],
@@ -146,6 +167,9 @@ def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mo
     assert actual[0].url == "url1"
     assert actual[0].labels == ["label-1-1", "label-1-2"]
     assert actual[0].total_comments_count == 1
+    assert actual[0].changed_files == 11
+    assert actual[0].code_additions == 111
+    assert actual[0].code_deletions == 1111
     assert actual[0].merged_at == datetime.strptime(
         "2020-01-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].first_committed_at == datetime.strptime(
@@ -155,6 +179,9 @@ def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mo
     assert actual[1].url == "url2"
     assert actual[1].labels == []
     assert actual[1].total_comments_count == 2
+    assert actual[1].changed_files == 22
+    assert actual[1].code_additions == 222
+    assert actual[1].code_deletions == 2222
     assert actual[1].merged_at == datetime.strptime(
         "2020-02-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].first_committed_at == datetime.strptime(
@@ -195,6 +222,9 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
     assert actual[0].url == "url1"
     assert actual[0].labels == ["label-1-1", "label-1-2"]
     assert actual[0].total_comments_count == 1
+    assert actual[0].changed_files == 11
+    assert actual[0].code_additions == 111
+    assert actual[0].code_deletions == 1111
     assert actual[0].merged_at == datetime.strptime(
         "2020-01-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].first_committed_at == datetime.strptime(
@@ -204,6 +234,9 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
     assert actual[1].url == "url2"
     assert actual[1].labels == []
     assert actual[1].total_comments_count == 2
+    assert actual[1].changed_files == 22
+    assert actual[1].code_additions == 222
+    assert actual[1].code_deletions == 2222
     assert actual[1].merged_at == datetime.strptime(
         "2020-02-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].first_committed_at == datetime.strptime(
@@ -213,6 +246,9 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
     assert actual[2].url == "url3"
     assert actual[2].labels == ["label-3-1"]
     assert actual[2].total_comments_count == 3
+    assert actual[2].changed_files == 33
+    assert actual[2].code_additions == 333
+    assert actual[2].code_deletions == 3333
     assert actual[2].merged_at == datetime.strptime(
         "2020-03-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[2].first_committed_at == datetime.strptime(
