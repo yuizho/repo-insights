@@ -9,7 +9,7 @@ A result is output in TSV format. you can put the result into some spreadsheet a
 ## Getting Started
 
 ```sh
-pip install git+https://github.com/yuizho/repo-insights
+pip install git+https://github.com/yuizho/repo-insights@0.0.2
 ```
 
 ## Usage
