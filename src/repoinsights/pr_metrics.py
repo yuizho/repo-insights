@@ -48,7 +48,7 @@ def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=30):
         query ($per_page: Int!, $owner: String!, $name: String!, $base: String, $cursor: String) {
             repository(owner: $owner, name: $name) {
                 pullRequests(
-                    orderBy: {field: CREATED_AT, direction: ASC},
+                    orderBy: {field: UPDATED_AT, direction: ASC},
                     last: $per_page,
                     states: MERGED,
                     baseRefName: $base,
