@@ -24,7 +24,7 @@ class TestPrMetricsRecord:
             "title",
             "user",
             "url",
-            "bug, improvement",
+            "bug,improvement",
             3,
             1,
             11,

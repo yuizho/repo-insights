@@ -147,7 +147,7 @@ class PrMetricsRecord:
             self.title,
             self.author,
             self.url,
-            ", ".join(self.labels),
+            ",".join(self.labels),
             self.total_comments_count,
             self.changed_files,
             self.code_additions,
