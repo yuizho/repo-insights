@@ -44,7 +44,7 @@ def get_next_cursor(json):
     return edges[0]["cursor"] if edges else None
 
 
-def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=30):
+def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=50):
     query = gql(
         """
         query ($per_page: Int!, $owner: String!, $name: String!, $base: String, $cursor: String) {
