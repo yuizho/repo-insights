@@ -57,7 +57,7 @@ def pr_metrics(repository_name, personal_token, first_created_date, base, label,
         to_csv(
             PrMetricsRecord.get_fields_name(),
             [r.get_fields()
-             for r in sorted(filtered_records, key=lambda r: r.merged_at)],
+             for r in sorted(filtered_records, key=lambda r: r.created_at)],
             delimiter
         )
     )
