@@ -26,18 +26,18 @@ def cli():
 @click.argument("repository_name")
 @click.argument("personal_token")
 @click.option(
-    "--first-merged-date",
+    "--first-created-date",
     "-f",
     default=ONE_MONTH_BEFORE,
     show_default=True,
-    help="first merged date to filter PRs (format: yyyy-mm-dd)",
+    help="first created date to filter PRs (format: yyyy-mm-dd)",
 )
 @click.option("--base", "-b", default=None, help="a base branch to filter PR")
 @click.option("--label", "-l", help="a label name to filter PR")
 @click.option("--delimiter", "-d", default=",", show_default=True, help="a delimiter character to separate fields of a result")
-def pr_metrics(repository_name, personal_token, first_merged_date, base, label, delimiter):
+def pr_metrics(repository_name, personal_token, first_created_date, base, label, delimiter):
     """
-    This command allows you to get PR metrics of a specified GitHub repository by PR activity.
+    This command allows you to get merged PR metrics of a specified GitHub repository by PR activity.
     Time taken to merge field of a result is calculated by (merged datetime - first commit datetime on the PR).
     A result is output in CSV format.
 
@@ -46,7 +46,7 @@ def pr_metrics(repository_name, personal_token, first_merged_date, base, label, 
     records = fetch_pr_metrics_records(
         repository_name,
         personal_token,
-        first_merged_date,
+        first_created_date,
         base
     )
 
@@ -57,7 +57,7 @@ def pr_metrics(repository_name, personal_token, first_merged_date, base, label, 
         to_csv(
             PrMetricsRecord.get_fields_name(),
             [r.get_fields()
-             for r in sorted(filtered_records, key=lambda r: r.merged_at)],
+             for r in sorted(filtered_records, key=lambda r: r.created_at)],
             delimiter
         )
     )
