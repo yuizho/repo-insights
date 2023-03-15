@@ -11,6 +11,7 @@ def create_pr_metrics_records(json):
         author = pr["node"]["author"]["login"]
         url = pr["node"]["url"]
         labels = [nodes["name"] for nodes in pr["node"]["labels"]["nodes"]]
+        created_at = datetime.strptime(pr["node"]["createdAt"], DATETIME_FORMAT)
         merged_at = datetime.strptime(pr["node"]["mergedAt"], DATETIME_FORMAT)
         first_committed_at = datetime.strptime(
             pr["node"]["commits"]["nodes"][0]["commit"]["committedDate"],
@@ -30,6 +31,7 @@ def create_pr_metrics_records(json):
                 changed_files,
                 code_additions,
                 code_deletions,
+                created_at,
                 merged_at,
                 first_committed_at,
             )
@@ -48,7 +50,7 @@ def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=30):
         query ($per_page: Int!, $owner: String!, $name: String!, $base: String, $cursor: String) {
             repository(owner: $owner, name: $name) {
                 pullRequests(
-                    orderBy: {field: UPDATED_AT, direction: ASC},
+                    orderBy: {field: CREATED_AT, direction: ASC},
                     last: $per_page,
                     states: MERGED,
                     baseRefName: $base,
@@ -57,6 +59,7 @@ def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=30):
                     edges {
                         cursor
                         node {
+                            createdAt
                             mergedAt
                             title
                             author {
@@ -104,7 +107,7 @@ def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=30):
         records_this_time = [
             record
             for record in create_pr_metrics_records(resp)
-            if record.merged_at > datetime.strptime(from_date, "%Y-%m-%d")
+            if record.created_at >= datetime.strptime(from_date, "%Y-%m-%d")
         ]
         records += records_this_time
         if len(records_this_time) < per_page:
@@ -113,6 +116,15 @@ def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=30):
         cursor = get_next_cursor(resp)
 
     return records
+
+
+def hoge(p: str) -> int:
+    return int(p)
+
+
+def fuga():
+    v: str = hoge("1")
+    v.split(",")
 
 
 class PrMetricsRecord:
@@ -126,6 +138,7 @@ class PrMetricsRecord:
         changed_files,
         code_additions,
         code_deletions,
+        created_at,
         merged_at,
         first_committed_at
     ):
@@ -137,12 +150,14 @@ class PrMetricsRecord:
         self.changed_files = changed_files
         self.code_additions = code_additions
         self.code_deletions = code_deletions
+        self.created_at = created_at
         self.merged_at = merged_at
         self.first_committed_at = first_committed_at
 
     def get_fields(self):
         time_taken_to_merge = self.merged_at - self.first_committed_at
         return [
+            str(self.created_at),
             str(self.merged_at),
             self.title,
             self.author,
@@ -158,6 +173,7 @@ class PrMetricsRecord:
     @classmethod
     def get_fields_name(cls):
         return [
+            "created at",
             "merged at",
             "title",
             "author",

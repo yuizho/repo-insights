@@ -21,7 +21,7 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  pr-metrics         This command allows you to get PR metrics of a...
+  pr-metrics         This command allows you to get merged PR metrics of a...
   release-frequency  This command allows you to get a release frequency...
 ```
 
@@ -30,14 +30,14 @@ Commands:
 ```
 Usage: repo-insights pr-metrics [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
 
-  This command allows you to get PR metrics of a specified GitHub repository by PR activity. Time taken to merge field of a result is calculated by (merged datetime - first commit datetime on the PR).
+  This command allows you to get merged PR metrics of a specified GitHub repository by PR activity. Time taken to merge field of a result is calculated by (merged datetime - first commit datetime on the PR).
   A result is output in CSV format.
 
   Usage: repo-insights pr-metrics "yuizho/repo-insights" "<your personal token
   of GitHub>"
 
 Options:
-  -f, --first-merged-date TEXT  first merged date to filter PRs (format: yyyy-
+  -f, --first-created-date TEXT  first created date to filter PRs (format: yyyy-
                                 mm-dd)  [default: 30 days before]
   -b, --base TEXT               a base branch to filter PR
   -l, --label TEXT              a label name to filter PR

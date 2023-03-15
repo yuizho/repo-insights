@@ -15,11 +15,13 @@ class TestPrMetricsRecord:
             1,
             11,
             10,
+            datetime.strptime("2020-12-31", "%Y-%m-%d"),
             datetime.strptime("2021-01-02", "%Y-%m-%d"),
             datetime.strptime("2021-01-01", "%Y-%m-%d"),
         ).get_fields()
 
         assert actual == [
+            "2020-12-31 00:00:00",
             "2021-01-02 00:00:00",
             "title",
             "user",
@@ -42,11 +44,13 @@ class TestPrMetricsRecord:
             1,
             11,
             10,
+            datetime.strptime("2020-12-31", "%Y-%m-%d"),
             datetime.strptime("2021-01-02", "%Y-%m-%d"),
             datetime.strptime("2021-01-01", "%Y-%m-%d"),
         ).get_fields_name()
 
         assert actual == [
+            "created at",
             "merged at",
             "title",
             "author",
@@ -170,6 +174,8 @@ def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mo
     assert actual[0].changed_files == 11
     assert actual[0].code_additions == 111
     assert actual[0].code_deletions == 1111
+    assert actual[0].created_at == datetime.strptime(
+        "2020-01-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].merged_at == datetime.strptime(
         "2020-01-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].first_committed_at == datetime.strptime(
@@ -182,6 +188,8 @@ def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mo
     assert actual[1].changed_files == 22
     assert actual[1].code_additions == 222
     assert actual[1].code_deletions == 2222
+    assert actual[1].created_at == datetime.strptime(
+        "2020-02-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].merged_at == datetime.strptime(
         "2020-02-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].first_committed_at == datetime.strptime(
@@ -225,6 +233,8 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
     assert actual[0].changed_files == 11
     assert actual[0].code_additions == 111
     assert actual[0].code_deletions == 1111
+    assert actual[0].created_at == datetime.strptime(
+        "2020-01-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].merged_at == datetime.strptime(
         "2020-01-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].first_committed_at == datetime.strptime(
@@ -237,6 +247,8 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
     assert actual[1].changed_files == 22
     assert actual[1].code_additions == 222
     assert actual[1].code_deletions == 2222
+    assert actual[1].created_at == datetime.strptime(
+        "2020-02-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].merged_at == datetime.strptime(
         "2020-02-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].first_committed_at == datetime.strptime(
@@ -249,6 +261,8 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
     assert actual[2].changed_files == 33
     assert actual[2].code_additions == 333
     assert actual[2].code_deletions == 3333
+    assert actual[2].created_at == datetime.strptime(
+        "2020-03-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[2].merged_at == datetime.strptime(
         "2020-03-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[2].first_committed_at == datetime.strptime(
