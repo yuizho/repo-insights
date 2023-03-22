@@ -8,6 +8,7 @@ def create_pr_metrics_records(json):
     result = []
     for pr in json["repository"]["pullRequests"]["edges"]:
         title = pr["node"]["title"]
+        base_branch = pr["node"]["baseRefName"]
         author = pr["node"]["author"]["login"]
         url = pr["node"]["url"]
         labels = [nodes["name"] for nodes in pr["node"]["labels"]["nodes"]]
@@ -24,6 +25,7 @@ def create_pr_metrics_records(json):
         result.append(
             PrMetricsRecord(
                 title,
+                base_branch,
                 author,
                 url,
                 labels,
@@ -61,6 +63,7 @@ def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=50):
                         node {
                             createdAt
                             mergedAt
+                            baseRefName
                             title
                             author {
                                 login
@@ -131,6 +134,7 @@ class PrMetricsRecord:
     def __init__(
         self,
         title,
+        base_branch,
         author,
         url,
         labels,
@@ -143,6 +147,7 @@ class PrMetricsRecord:
         first_committed_at
     ):
         self.title = title
+        self.base_branch = base_branch
         self.author = author
         self.url = url
         self.labels = labels
@@ -160,6 +165,7 @@ class PrMetricsRecord:
             str(self.created_at),
             str(self.merged_at),
             self.title,
+            self.base_branch,
             self.author,
             self.url,
             ",".join(self.labels),
@@ -176,6 +182,7 @@ class PrMetricsRecord:
             "created at",
             "merged at",
             "title",
+            "base branch",
             "author",
             "url",
             "labels",

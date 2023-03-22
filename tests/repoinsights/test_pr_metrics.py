@@ -8,6 +8,7 @@ class TestPrMetricsRecord:
     def test_get_fields(self):
         actual = PrMetricsRecord(
             "title",
+            "main",
             "user",
             "url",
             ["bug", "improvement"],
@@ -24,6 +25,7 @@ class TestPrMetricsRecord:
             "2020-12-31 00:00:00",
             "2021-01-02 00:00:00",
             "title",
+            "main",
             "user",
             "url",
             "bug,improvement",
@@ -31,12 +33,13 @@ class TestPrMetricsRecord:
             1,
             11,
             10,
-            "1.0"
+            "2.0"
         ]
 
     def test_get_fields_name(self):
         actual = PrMetricsRecord(
             "title",
+            "main",
             "user",
             "url",
             ["bug", "improvement"],
@@ -53,6 +56,7 @@ class TestPrMetricsRecord:
             "created at",
             "merged at",
             "title",
+            "base branch",
             "author",
             "url",
             "labels",
@@ -80,6 +84,7 @@ def github_client_mocks(mocker):
                             "node": {
                                 "mergedAt": "2020-01-03T00:00:00Z",
                                 "createdAt": "2020-01-01T00:00:00Z",
+                                "baseRefName": "branch1",
                                 "title": "title1",
                                 "author": {
                                     "login": "user1"
@@ -98,6 +103,7 @@ def github_client_mocks(mocker):
                             "node": {
                                 "mergedAt": "2020-02-03T00:00:00Z",
                                 "createdAt": "2020-02-01T00:00:00Z",
+                                "baseRefName": "branch2",
                                 "title": "title2",
                                 "author": {
                                     "login": "user2"
@@ -125,6 +131,7 @@ def github_client_mocks(mocker):
                             "node": {
                                 "mergedAt": "2020-03-03T00:00:00Z",
                                 "createdAt": "2020-03-01T00:00:00Z",
+                                "baseRefName": "branch3",
                                 "title": "title3",
                                 "author": {
                                     "login": "user3"
@@ -167,6 +174,7 @@ def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mo
         )
     ]
     assert actual[0].title == "title1"
+    assert actual[0].base_branch == "branch1"
     assert actual[0].author == "user1"
     assert actual[0].url == "url1"
     assert actual[0].labels == ["label-1-1", "label-1-2"]
@@ -226,6 +234,7 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
         ),
     ]
     assert actual[0].title == "title1"
+    assert actual[0].base_branch == "branch1"
     assert actual[0].author == "user1"
     assert actual[0].url == "url1"
     assert actual[0].labels == ["label-1-1", "label-1-2"]
@@ -240,6 +249,7 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
     assert actual[0].first_committed_at == datetime.strptime(
         "2020-01-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].title == "title2"
+    assert actual[1].base_branch == "branch2"
     assert actual[1].author == "user2"
     assert actual[1].url == "url2"
     assert actual[1].labels == []
@@ -254,6 +264,7 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
     assert actual[1].first_committed_at == datetime.strptime(
         "2020-02-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[2].title == "title3"
+    assert actual[2].base_branch == "branch3"
     assert actual[2].author == "user3"
     assert actual[2].url == "url3"
     assert actual[2].labels == ["label-3-1"]
