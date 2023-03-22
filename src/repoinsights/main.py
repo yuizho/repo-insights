@@ -38,7 +38,7 @@ def cli():
 def pr_metrics(repository_name, personal_token, first_created_date, base, label, delimiter):
     """
     This command allows you to get merged PR metrics of a specified GitHub repository by PR activity.
-    Time taken to merge field of a result is calculated by (merged datetime - first commit datetime on the PR).
+    Time taken to merge field of a result is calculated by (merged datetime - created datetime of the PR).
     A result is output in CSV format.
 
     Usage: repo-insights pr-metrics "yuizho/repo-insights" "<your personal token of GitHub>"

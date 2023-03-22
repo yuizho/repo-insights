@@ -155,7 +155,7 @@ class PrMetricsRecord:
         self.first_committed_at = first_committed_at
 
     def get_fields(self):
-        time_taken_to_merge = self.merged_at - self.first_committed_at
+        time_taken_to_merge = self.merged_at - self.created_at
         return [
             str(self.created_at),
             str(self.merged_at),
