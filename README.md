@@ -9,7 +9,7 @@ A result is output in TSV format. you can put the result into some spreadsheet a
 ## Getting Started
 
 ```sh
-pip install git+https://github.com/yuizho/repo-insights@0.0.3
+pip install git+https://github.com/yuizho/repo-insights@0.0.4
 ```
 
 ## Usage
@@ -30,7 +30,8 @@ Commands:
 ```
 Usage: repo-insights pr-metrics [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
 
-  This command allows you to get merged PR metrics of a specified GitHub repository by PR activity. Time taken to merge field of a result is calculated by (merged datetime - first commit datetime on the PR).
+  This command allows you to get merged PR metrics of a specified GitHub repository by PR activity.
+  Time taken to merge field of a result is calculated by (merged datetime - created datetime of the PR).
   A result is output in CSV format.
 
   Usage: repo-insights pr-metrics "yuizho/repo-insights" "<your personal token
