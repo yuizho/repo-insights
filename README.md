@@ -3,8 +3,7 @@
 [![Actions Status](https://github.com/yuizho/repo-insights/workflows/build/badge.svg)](https://github.com/yuizho/repo-insights/actions)
 ![Python Version](https://img.shields.io/badge/Python-3.7%2B-blue)
 
-A CLI tool to get Release Frequency and Lead Time for Changes by GitHub repository activity.
-A result is output in TSV format. you can put the result into some spreadsheet application.
+A CLI tool to get metrics, activity data of the GitHub repository.
 
 ## Getting Started
 
@@ -22,7 +21,7 @@ Options:
 
 Commands:
   pr-metrics         This command allows you to get merged PR metrics of a...
-  release-frequency  This command allows you to get a release frequency...
+  releases  This command allows you to get a releases data of a...
 ```
 
 ### pr-metrics
@@ -46,17 +45,15 @@ Options:
   --help                        Show this message and exit.
 ```
 
-### release-frequency
+### releases
 
 ```
-Usage: repo-insights release-frequency [OPTIONS] REPOSITORY_NAME
-                                       PERSONAL_TOKEN
+Usage: repo-insights releases [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
 
-  This command allows you to get a release frequency of a specified GitHub
-  repository by Release activity. A result is output in CSV format.
+  This command allows you to get a releases data of a specified GitHub
+  repository. A result is output in CSV format.
 
-  Usage: repo-insights release-frequency "yuizho/repo-insights" "<your
-  personal token of GitHub>"
+  Usage: repo-insights releases "yuizho/repo-insights" "<your personal token of GitHub>"
 
 Options:
   -f, --first-date TEXT  first date to filter Releases  [default: 30 days before]

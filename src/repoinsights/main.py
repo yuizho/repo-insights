@@ -1,6 +1,6 @@
 import click
 from repoinsights.pr_metrics import fetch_pr_metrics_records, PrMetricsRecord
-from repoinsights.release_frequency import ReleaseRecord, fetch_release_records
+from repoinsights.releases import Release, fetch_releases
 from datetime import datetime, timedelta
 from io import StringIO
 import csv
@@ -74,14 +74,14 @@ def pr_metrics(repository_name, personal_token, first_created_date, base, label,
     help="first date to filter Releases",
 )
 @click.option("--delimiter", "-d", default=",", show_default=True, help="a delimiter character to separate fields of a result")
-def release_frequency(repository_name, personal_token, first_date, delimiter):
+def releases(repository_name, personal_token, first_date, delimiter):
     """
-    This command allows you to get a release frequency of a specified GitHub repository by Release activity.
+    This command allows you to get a releases data of a specified GitHub repository.
     A result is output in CSV format.
 
-    Usage: repo-insights release-frequency "yuizho/repo-insights" "<your personal token of GitHub>"
+    Usage: repo-insights releases "yuizho/repo-insights" "<your personal token of GitHub>"
     """
-    records = fetch_release_records(
+    releases = fetch_releases(
         repository_name,
         personal_token,
         first_date
@@ -89,8 +89,8 @@ def release_frequency(repository_name, personal_token, first_date, delimiter):
 
     print(
         to_csv(
-            ReleaseRecord.get_fields_name(),
-            [r.get_fields() for r in sorted(records, key=lambda r: r.published_at)],
+            Release.get_fields_name(),
+            [r.get_fields() for r in sorted(releases, key=lambda r: r.published_at)],
             delimiter
         )
     )
