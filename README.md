@@ -21,7 +21,7 @@ Options:
 
 Commands:
   pr        This command allows you to get activity data of a GitHub Pull...
-  release  This command allows you to get a releases data of a...
+  release  This command allows you to get activity data of a GitHub Release.
 ```
 
 ### Pull Request
