@@ -20,21 +20,20 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  pr-metrics         This command allows you to get merged PR metrics of a...
+  pr        This command allows you to get activity data of a GitHub Pull...
   releases  This command allows you to get a releases data of a...
 ```
 
-### pr-metrics
+### Pull Request
 
 ```
-Usage: repo-insights pr-metrics [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
+Usage: repo-insights pr [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
 
-  This command allows you to get merged PR metrics of a specified GitHub repository by PR activity.
+  This command allows you to get activity data of a GitHub Pull Reuqst.
   Time taken to merge field of a result is calculated by (merged datetime - created datetime of the PR).
   A result is output in CSV format.
 
-  Usage: repo-insights pr-metrics "yuizho/repo-insights" "<your personal token
-  of GitHub>"
+  Usage: repo-insights pr "yuizho/repo-insights" "<your personal token of GitHub>"
 
 Options:
   -f, --first-created-date TEXT  first created date to filter PRs (format: yyyy-

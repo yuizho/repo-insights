@@ -1,12 +1,12 @@
 from datetime import datetime
-from repoinsights.pr_metrics import PrMetricsRecord, create_pr_metrics_records, fetch_pr_metrics_records
+from repoinsights.pr import PullRequest, create_pull_requests, fetch_pull_requests
 from repoinsights.github_api import Client
 import pytest
 
 
-class TestPrMetricsRecord:
+class TestPullRequest:
     def test_get_fields(self):
-        actual = PrMetricsRecord(
+        actual = PullRequest(
             "title",
             "main",
             "user",
@@ -39,7 +39,7 @@ class TestPrMetricsRecord:
         ]
 
     def test_get_fields_name(self):
-        actual = PrMetricsRecord(
+        actual = PullRequest(
             "title",
             "main",
             "user",
@@ -138,7 +138,7 @@ def github_client_mocks(mocker):
                     "edges": [
                         {
                             "cursor": "cursor3",
-                            "node": {
+p                            "node": {
                                 "mergedAt": "2020-03-03T00:00:00Z",
                                 "createdAt": "2020-03-01T00:00:00Z",
                                 "baseRefName": "branch3",
@@ -167,9 +167,9 @@ def github_client_mocks(mocker):
     yield execute_mock
 
 
-def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mocks):
+def test_fetch_pull_requests_just_one_time_request(mocker, github_client_mocks):
     # when
-    actual = fetch_pr_metrics_records(
+    actual = fetch_pull_requests(
         "yuizho/my-repo", "my-token", "2020-01-01", "master", 3)
 
     # then
@@ -220,9 +220,9 @@ def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mo
     assert actual[1].repository_name == "yuizho/hoge2"
 
 
-def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_mocks):
+def test_fetch_pull_requests_records_multiple_times_request(mocker, github_client_mocks):
     # when
-    actual = fetch_pr_metrics_records(
+    actual = fetch_pull_requests(
         "yuizho/my-repo", "my-token", "2020-01-01", "master", 2)
 
     # then
@@ -299,9 +299,9 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
     assert actual[2].repository_name == "yuizho/hoge3"
 
 
-def test_create_pr_metrics_records_empty():
+def test_create_pull_requests_records_empty():
     # when
-    actual = create_pr_metrics_records(
+    actual = create_pull_requests(
         {"repository": {"pullRequests": {"edges": []}}})
 
     # then

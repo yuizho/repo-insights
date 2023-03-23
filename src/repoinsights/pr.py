@@ -4,7 +4,7 @@ from gql import gql
 from datetime import datetime, timedelta
 
 
-def create_pr_metrics_records(json):
+def create_pull_requests(json):
     result = []
     for pr in json["repository"]["pullRequests"]["edges"]:
         title = pr["node"]["title"]
@@ -24,7 +24,7 @@ def create_pr_metrics_records(json):
         code_deletions = pr["node"]["deletions"]
         repository_name = pr["node"]["repository"]["nameWithOwner"]
         result.append(
-            PrMetricsRecord(
+            PullRequest(
                 title,
                 base_branch,
                 author,
@@ -48,7 +48,7 @@ def get_next_cursor(json):
     return edges[0]["cursor"] if edges else None
 
 
-def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=50):
+def fetch_pull_requests(repo_name, token, from_date, base, per_page=50):
     query = gql(
         """
         query ($per_page: Int!, $owner: String!, $name: String!, $base: String, $cursor: String) {
@@ -114,7 +114,7 @@ def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=50):
         resp = client.execute(query, variables)
         records_this_time = [
             record
-            for record in create_pr_metrics_records(resp)
+            for record in create_pull_requests(resp)
             if record.created_at >= datetime.strptime(from_date, "%Y-%m-%d")
         ]
         records += records_this_time
@@ -135,7 +135,7 @@ def fuga():
     v.split(",")
 
 
-class PrMetricsRecord:
+class PullRequest:
     def __init__(
         self,
         title,
