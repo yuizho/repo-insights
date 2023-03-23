@@ -11,15 +11,27 @@ class TestReleaseRecord:
             "url",
             "user",
             datetime.strptime("2021-01-01", "%Y-%m-%d"),
-            timedelta(1)
+            timedelta(1),
+            "yuizho/hoge",
         ).get_fields()
 
-        assert actual == ["2021-01-01 00:00:00", "title", "url", "user", "1.0"]
+        assert actual == [
+            "2021-01-01 00:00:00",
+            "title",
+            "url",
+            "user",
+            "1.0",
+            "yuizho/hoge"
+        ]
 
     def test_get_fields_name(self):
         actual = ReleaseRecord(
-            "title", "url", "user", datetime.strptime(
-                "2021-01-01", "%Y-%m-%d"), timedelta(1)
+            "title",
+            "url",
+            "user",
+            datetime.strptime("2021-01-01", "%Y-%m-%d"),
+            timedelta(1),
+            "yuizho/hoge"
         ).get_fields_name()
 
         assert actual == [
@@ -27,7 +39,8 @@ class TestReleaseRecord:
             "title",
             "url",
             "author",
-            "release frequency(day)"
+            "release frequency(day)",
+            "repository name",
         ]
 
 
@@ -52,6 +65,9 @@ def github_client_mocks(mocker):
                                 "author": {
                                     "login": "user1"
                                 },
+                                "repository": {
+                                    "nameWithOwner": "yuizho/hoge1",
+                                },
                             },
                         },
                         {
@@ -63,6 +79,9 @@ def github_client_mocks(mocker):
                                 "url": "url2",
                                 "author": {
                                     "login": "user2"
+                                },
+                                "repository": {
+                                    "nameWithOwner": "yuizho/hoge2",
                                 },
                             },
                         },
@@ -84,6 +103,9 @@ def github_client_mocks(mocker):
                                 "url": "url3",
                                 "author": {
                                     "login": "user3"
+                                },
+                                "repository": {
+                                    "nameWithOwner": "yuizho/hoge3",
                                 },
                             },
                         },
@@ -120,12 +142,14 @@ def test_fetch_release_records_just_one_time_request(mocker, github_client_mocks
     assert actual[0].published_at == datetime.strptime(
         "2020-01-30T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].frequency == timedelta(0)
+    assert actual[0].repository_name == "yuizho/hoge1"
     assert actual[1].title == "title2"
     assert actual[1].url == "url2"
     assert actual[1].author == "user2"
     assert actual[1].published_at == datetime.strptime(
         "2020-02-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].frequency == timedelta(2)
+    assert actual[1].repository_name == "yuizho/hoge2"
 
 
 def test_fetch_release_records_multiple_time_request(mocker, github_client_mocks):
@@ -161,15 +185,18 @@ def test_fetch_release_records_multiple_time_request(mocker, github_client_mocks
     assert actual[0].published_at == datetime.strptime(
         "2020-01-30T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].frequency == timedelta(0)
+    assert actual[0].repository_name == "yuizho/hoge1"
     assert actual[1].title == "title2"
     assert actual[1].url == "url2"
     assert actual[1].author == "user2"
     assert actual[1].published_at == datetime.strptime(
         "2020-02-01T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].frequency == timedelta(2)
+    assert actual[1].repository_name == "yuizho/hoge2"
     assert actual[2].title == "title3"
     assert actual[2].url == "url3"
     assert actual[2].author == "user3"
     assert actual[2].published_at == datetime.strptime(
         "2020-02-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[2].frequency == timedelta(1)
+    assert actual[2].repository_name == "yuizho/hoge3"
