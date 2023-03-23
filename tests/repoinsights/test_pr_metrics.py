@@ -189,6 +189,7 @@ def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mo
     assert actual[0].first_committed_at == datetime.strptime(
         "2020-01-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].title == "title2"
+    assert actual[1].base_branch == "branch2"
     assert actual[1].author == "user2"
     assert actual[1].url == "url2"
     assert actual[1].labels == []
