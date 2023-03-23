@@ -47,7 +47,7 @@ Options:
 ### Release
 
 ```
-Usage: repo-insights releases [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
+Usage: repo-insights release [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
 
   This command allows you to get activity data of a GitHub Release.
   A result is output in CSV format.
