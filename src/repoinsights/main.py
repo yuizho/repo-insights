@@ -1,6 +1,6 @@
 import click
 from repoinsights.pr import fetch_pull_requests, PullRequest
-from repoinsights.releases import Release, fetch_releases
+from repoinsights.release import Release, fetch_releases
 from datetime import datetime, timedelta
 from io import StringIO
 import csv
@@ -74,12 +74,12 @@ def pr(repository_name, personal_token, first_created_date, base, label, delimit
     help="first date to filter Releases",
 )
 @click.option("--delimiter", "-d", default=",", show_default=True, help="a delimiter character to separate fields of a result")
-def releases(repository_name, personal_token, first_date, delimiter):
+def release(repository_name, personal_token, first_date, delimiter):
     """
-    This command allows you to get a releases data of a specified GitHub repository.
+    This command allows you to get activity data of a GitHub Release.
     A result is output in CSV format.
 
-    Usage: repo-insights releases "yuizho/repo-insights" "<your personal token of GitHub>"
+    Usage: repo-insights release "yuizho/repo-insights" "<your personal token of GitHub>"
     """
     releases = fetch_releases(
         repository_name,

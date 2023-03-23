@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from repoinsights.github_api import Client
-from repoinsights.releases import Release, fetch_releases
+from repoinsights.release import Release, fetch_releases
 import pytest
 
 

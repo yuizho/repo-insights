@@ -3,7 +3,7 @@
 [![Actions Status](https://github.com/yuizho/repo-insights/workflows/build/badge.svg)](https://github.com/yuizho/repo-insights/actions)
 ![Python Version](https://img.shields.io/badge/Python-3.7%2B-blue)
 
-A CLI tool to get metrics, activity data of the GitHub repository.
+A CLI tool to get activity data of a GitHub repository.
 
 ## Getting Started
 
@@ -21,7 +21,7 @@ Options:
 
 Commands:
   pr        This command allows you to get activity data of a GitHub Pull...
-  releases  This command allows you to get a releases data of a...
+  release  This command allows you to get a releases data of a...
 ```
 
 ### Pull Request
@@ -44,15 +44,15 @@ Options:
   --help                        Show this message and exit.
 ```
 
-### releases
+### Release
 
 ```
 Usage: repo-insights releases [OPTIONS] REPOSITORY_NAME PERSONAL_TOKEN
 
-  This command allows you to get a releases data of a specified GitHub
-  repository. A result is output in CSV format.
+  This command allows you to get activity data of a GitHub Release.
+  A result is output in CSV format.
 
-  Usage: repo-insights releases "yuizho/repo-insights" "<your personal token of GitHub>"
+  Usage: repo-insights release "yuizho/repo-insights" "<your personal token of GitHub>"
 
 Options:
   -f, --first-date TEXT  first date to filter Releases  [default: 30 days before]
