@@ -22,6 +22,7 @@ def create_pr_metrics_records(json):
         changed_files = pr["node"]["changedFiles"]
         code_additions = pr["node"]["additions"]
         code_deletions = pr["node"]["deletions"]
+        repository_name = pr["node"]["repository"]["nameWithOwner"]
         result.append(
             PrMetricsRecord(
                 title,
@@ -36,6 +37,7 @@ def create_pr_metrics_records(json):
                 created_at,
                 merged_at,
                 first_committed_at,
+                repository_name
             )
         )
     return result
@@ -85,6 +87,9 @@ def fetch_pr_metrics_records(repo_name, token, from_date, base, per_page=50):
                             changedFiles
                             additions
                             deletions
+                            repository {
+                                nameWithOwner
+                            }
                         }
                     }
                 }
@@ -144,7 +149,8 @@ class PrMetricsRecord:
         code_deletions,
         created_at,
         merged_at,
-        first_committed_at
+        first_committed_at,
+        repository_name
     ):
         self.title = title
         self.base_branch = base_branch
@@ -158,6 +164,7 @@ class PrMetricsRecord:
         self.created_at = created_at
         self.merged_at = merged_at
         self.first_committed_at = first_committed_at
+        self.repository_name = repository_name
 
     def get_fields(self):
         time_taken_to_merge = self.merged_at - self.created_at
@@ -174,6 +181,7 @@ class PrMetricsRecord:
             self.code_additions,
             self.code_deletions,
             str(round(time_taken_to_merge / timedelta(days=1), 2)),
+            self.repository_name,
         ]
 
     @classmethod
@@ -190,5 +198,6 @@ class PrMetricsRecord:
             "changed files",
             "code additions",
             "code deletions",
-            "time taken to merge(day)"
+            "time taken to merge(day)",
+            "repository name",
         ]

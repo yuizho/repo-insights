@@ -17,12 +17,14 @@ def create_releases(json):
             pr["node"]["publishedAt"],
             DATETIME_FORMAT
         )
+        repository_name = pr["node"]["repository"]["nameWithOwner"]
         result.append(
             Release(
                 title,
                 url,
                 author,
-                published_at
+                published_at,
+                repository_name
             )
         )
     return result
@@ -45,7 +47,8 @@ def create_releases_records(releases):
                 release.url,
                 release.author,
                 release.published_at,
-                frequency
+                frequency,
+                release.repository_name
             )
         )
         prev_published_at = release.published_at
@@ -68,6 +71,9 @@ def fetch_release_records(repo_name, token, from_date, per_page=30):
                             url
                             author {
                                 login
+                            }
+                            repository {
+                                nameWithOwner
                             }
                         }
                     }
@@ -110,19 +116,43 @@ class Release:
     url: str
     author: str
     published_at: datetime
+    repository_name: str
 
 
 class ReleaseRecord:
-    def __init__(self, title, url, author, published_at, frequency):
+    def __init__(
+            self,
+            title,
+            url,
+            author,
+            published_at,
+            frequency,
+            repository_name
+    ):
         self.title = title
         self.url = url
         self.published_at = published_at
         self.author = author
         self.frequency = frequency
+        self.repository_name = repository_name
 
     def get_fields(self):
-        return [str(self.published_at), self.title, self.url, self.author, str(round(self.frequency / timedelta(days=1), 2))]
+        return [
+            str(self.published_at),
+            self.title,
+            self.url,
+            self.author,
+            str(round(self.frequency / timedelta(days=1), 2)),
+            self.repository_name
+        ]
 
     @classmethod
     def get_fields_name(cls):
-        return ["published at", "title", "url", "author", "release frequency(day)"]
+        return [
+            "published at",
+            "title",
+            "url",
+            "author",
+            "release frequency(day)",
+            "repository name"
+        ]
