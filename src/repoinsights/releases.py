@@ -35,27 +35,7 @@ def get_next_cursor(json):
     return edges[0]["cursor"] if edges else None
 
 
-def create_releases_records(releases):
-    records = []
-    prev_published_at = None
-    for release in sorted(releases, key=lambda r: r.published_at):
-        frequency = release.published_at - \
-            prev_published_at if prev_published_at else timedelta()
-        records.append(
-            ReleaseRecord(
-                release.title,
-                release.url,
-                release.author,
-                release.published_at,
-                frequency,
-                release.repository_name
-            )
-        )
-        prev_published_at = release.published_at
-    return records
-
-
-def fetch_release_records(repo_name, token, from_date, per_page=30):
+def fetch_releases(repo_name, token, from_date, per_page=30):
     query = gql(
         """
         query ($per_page: Int!, $owner: String!, $name: String!, $cursor: String) {
@@ -107,33 +87,23 @@ def fetch_release_records(repo_name, token, from_date, per_page=30):
 
         cursor = get_next_cursor(resp)
 
-    return create_releases_records(releases)
+    return releases
 
 
-@dataclass
+
 class Release:
-    title: str
-    url: str
-    author: str
-    published_at: datetime
-    repository_name: str
-
-
-class ReleaseRecord:
     def __init__(
             self,
             title,
             url,
             author,
             published_at,
-            frequency,
             repository_name
     ):
         self.title = title
         self.url = url
         self.published_at = published_at
         self.author = author
-        self.frequency = frequency
         self.repository_name = repository_name
 
     def get_fields(self):
@@ -142,7 +112,6 @@ class ReleaseRecord:
             self.title,
             self.url,
             self.author,
-            str(round(self.frequency / timedelta(days=1), 2)),
             self.repository_name
         ]
 
@@ -153,6 +122,5 @@ class ReleaseRecord:
             "title",
             "url",
             "author",
-            "release frequency(day)",
             "repository name"
         ]
