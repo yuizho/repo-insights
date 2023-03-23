@@ -19,6 +19,7 @@ class TestPrMetricsRecord:
             datetime.strptime("2020-12-31", "%Y-%m-%d"),
             datetime.strptime("2021-01-02", "%Y-%m-%d"),
             datetime.strptime("2021-01-01", "%Y-%m-%d"),
+            "yuizho/hoge",
         ).get_fields()
 
         assert actual == [
@@ -33,7 +34,8 @@ class TestPrMetricsRecord:
             1,
             11,
             10,
-            "2.0"
+            "2.0",
+            "yuizho/hoge",
         ]
 
     def test_get_fields_name(self):
@@ -50,6 +52,7 @@ class TestPrMetricsRecord:
             datetime.strptime("2020-12-31", "%Y-%m-%d"),
             datetime.strptime("2021-01-02", "%Y-%m-%d"),
             datetime.strptime("2021-01-01", "%Y-%m-%d"),
+            "yuizho/hoge",
         ).get_fields_name()
 
         assert actual == [
@@ -64,7 +67,8 @@ class TestPrMetricsRecord:
             "changed files",
             "code additions",
             "code deletions",
-            "time taken to merge(day)"
+            "time taken to merge(day)",
+            "repository name",
         ]
 
 
@@ -96,6 +100,9 @@ def github_client_mocks(mocker):
                                 "changedFiles": 11,
                                 "additions": 111,
                                 "deletions": 1111,
+                                "repository": {
+                                    "nameWithOwner": "yuizho/hoge1"
+                                },
                             },
                         },
                         {
@@ -115,6 +122,9 @@ def github_client_mocks(mocker):
                                 "changedFiles": 22,
                                 "additions": 222,
                                 "deletions": 2222,
+                                "repository": {
+                                    "nameWithOwner": "yuizho/hoge2"
+                                },
                             },
                         },
                     ],
@@ -143,6 +153,9 @@ def github_client_mocks(mocker):
                                 "changedFiles": 33,
                                 "additions": 333,
                                 "deletions": 3333,
+                                "repository": {
+                                    "nameWithOwner": "yuizho/hoge3"
+                                },
                             },
                         },
                     ],
@@ -188,6 +201,7 @@ def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mo
         "2020-01-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].first_committed_at == datetime.strptime(
         "2020-01-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+    assert actual[0].repository_name == "yuizho/hoge1"
     assert actual[1].title == "title2"
     assert actual[1].base_branch == "branch2"
     assert actual[1].author == "user2"
@@ -203,6 +217,7 @@ def test_fetch_pr_metrics_records_just_one_time_request(mocker, github_client_mo
         "2020-02-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].first_committed_at == datetime.strptime(
         "2020-02-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+    assert actual[1].repository_name == "yuizho/hoge2"
 
 
 def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_mocks):
@@ -249,6 +264,7 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
         "2020-01-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[0].first_committed_at == datetime.strptime(
         "2020-01-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+    assert actual[0].repository_name == "yuizho/hoge1"
     assert actual[1].title == "title2"
     assert actual[1].base_branch == "branch2"
     assert actual[1].author == "user2"
@@ -264,6 +280,7 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
         "2020-02-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[1].first_committed_at == datetime.strptime(
         "2020-02-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+    assert actual[1].repository_name == "yuizho/hoge2"
     assert actual[2].title == "title3"
     assert actual[2].base_branch == "branch3"
     assert actual[2].author == "user3"
@@ -279,6 +296,7 @@ def test_fetch_pr_metrics_records_multiple_times_request(mocker, github_client_m
         "2020-03-03T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
     assert actual[2].first_committed_at == datetime.strptime(
         "2020-03-02T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+    assert actual[2].repository_name == "yuizho/hoge3"
 
 
 def test_create_pr_metrics_records_empty():
