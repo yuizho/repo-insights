@@ -138,7 +138,7 @@ def github_client_mocks(mocker):
                     "edges": [
                         {
                             "cursor": "cursor3",
-p                            "node": {
+                            "node": {
                                 "mergedAt": "2020-03-03T00:00:00Z",
                                 "createdAt": "2020-03-01T00:00:00Z",
                                 "baseRefName": "branch3",
