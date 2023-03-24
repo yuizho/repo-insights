@@ -126,15 +126,6 @@ def fetch_pull_requests(repo_name, token, from_date, base, per_page=50):
     return records
 
 
-def hoge(p: str) -> int:
-    return int(p)
-
-
-def fuga():
-    v: str = hoge("1")
-    v.split(",")
-
-
 class PullRequest:
     def __init__(
         self,
