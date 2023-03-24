@@ -12,7 +12,7 @@ def create_releases(json):
             continue
         title = pr["node"]["name"]
         url = pr["node"]["url"]
-        author = pr["node"]["author"]["login"]
+        author = pr["node"]["author"]["login"] if pr["node"]["author"] else ""
         published_at = datetime.strptime(
             pr["node"]["publishedAt"],
             DATETIME_FORMAT
