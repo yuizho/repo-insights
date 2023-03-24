@@ -9,7 +9,7 @@ def create_pull_requests(json):
     for pr in json["repository"]["pullRequests"]["edges"]:
         title = pr["node"]["title"]
         base_branch = pr["node"]["baseRefName"]
-        author = pr["node"]["author"]["login"]
+        author = pr["node"]["author"]["login"] if pr["node"]["author"] else ""
         url = pr["node"]["url"]
         labels = [nodes["name"] for nodes in pr["node"]["labels"]["nodes"]]
         created_at = datetime.strptime(pr["node"]["createdAt"], DATETIME_FORMAT)
