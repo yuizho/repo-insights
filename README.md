@@ -8,7 +8,7 @@ A CLI tool to get activity data of a GitHub repository.
 ## Getting Started
 
 ```sh
-pip install git+https://github.com/yuizho/repo-insights@0.0.6
+pip install git+https://github.com/yuizho/repo-insights@0.0.7
 ```
 
 ## Usage
